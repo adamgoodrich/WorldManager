@@ -1,5 +1,5 @@
-# WorldManager
-World Manager (WAPI) is a generic world and environment command an control system for Unity that enables environmental assets to play nicely together.
+# WorldManager (WAPI)
+World Manager (WAPI) is a generic world and environment command and control system for Unity that enables environmental assets to play nicely together.
 
 It does this be providing a simple but powerful interface that allows you to control the components that render your environment a generic and coordinated way.
 
@@ -22,7 +22,7 @@ To receive events when values are changed connect up the event handlers e.g.
 To stop receiving events when values change disconnect your handler e.g.
     WorldManager.Instance.OnApiChangedHandler -= YourHandler()
 
-To use as global variables in shaders the general naming standard is _WAPI_[PropertyName], however in many instances the data has been stored in vectors for efficient transfer to the GPU, so take a peek at the code to get the naming. At the very least however all shader variables are prefixed with _WAPI_.
+To use as global variables in shaders the general naming standard is __WAPI__[PropertyName], however in many instances the data has been stored in vectors for efficient transfer to the GPU, so take a peek at the code to get the naming. At the very least however all shader variables are prefixed with __WAPI__.
 
 ## API Categories
 
