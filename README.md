@@ -7,6 +7,8 @@ The intention is to bridge the gap between assets and make it easier to develop 
 
 Assets can choose which parts of the API they implement and regardless of how much they support, you will still get  value from this system because of the way it coordinates their behaviour.
 
+## Basic Usage Pattern
+
 To generate events, and get and set values use the following generic format e.g. 
     WorldManager.Instance.Api()
 
@@ -15,3 +17,20 @@ To receive events when values are changed connect up the event handlers e.g.
 
 To stop receiving events when values change disconnect your handler e.g.
     WorldManager.Instance.OnApiChangedHandler -= YourHandler()
+
+## API Categories
+
+* IsActive
+* Time
+* Player Location, Sea Level, Latitude & Longitude
+* Temperature and humidity
+* Wind
+* Fog
+* Rain
+* Hail
+* Snow
+* Thunder
+* Clouds
+* Moon
+* Season
+* Sound Levels
