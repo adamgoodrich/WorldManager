@@ -5,8 +5,8 @@ namespace WorldAPI
 {
     /// <summary>
     /// 
-    /// WorldManager allows you to control the components that render your environment 
-    /// a generic and coordinated way. 
+    /// WorldManager API (WAPI) allows you to control the components that render your 
+    /// environment a generic and coordinated way. 
     /// 
     /// The intention is to bridge the gap between assets and make it easier to 
     /// develop games by plugging them together using a common API. You will still
@@ -15,7 +15,7 @@ namespace WorldAPI
     /// 
     /// Assets can choose which parts of the API they implement and regardless of how 
     /// much they support, you will still get  value from this system because of the 
-    /// way it coordinates theeir behaviour.
+    /// way it coordinates their behaviour.
     /// 
     /// To generate events, and get and set values use the following generic format e.g. 
     ///     WorldManager.Instance.Api()
@@ -25,6 +25,12 @@ namespace WorldAPI
     /// 
     /// To stop receiving events when values change disconnect your handler e.g.
     ///     WorldManager.Instance.OnApiChangedHandler -= YourHandler()
+    /// 
+    /// To use as global variables in shaders the general naming standard is 
+    /// _WAPI_[PropertyName], however in many instances the data has been stored
+    /// in vectors for efficient transfer to the GPU, so take a peek at the code to 
+    /// get the naming. At the very least however all shader variables are prefixed 
+    /// with _WAPI_.
     /// 
     /// </summary>
     public class WorldManager : MonoBehaviour
@@ -44,6 +50,7 @@ namespace WorldAPI
                 if (m_worldAPIActive != value)
                 {
                     m_worldAPIActive = value;
+                    Shader.SetGlobalInt("_WAPI_WorldAPIActive", m_worldAPIActive ? 1 : 0);
                     if (OnWorldAPIActiveChanged != null)
                     {
                         OnWorldAPIActiveChanged(this, m_worldAPIActive);
@@ -68,6 +75,7 @@ namespace WorldAPI
                 if (m_gameTime != value)
                 {
                     m_gameTime = value;
+                    Shader.SetGlobalVector("_WAPI_GameTime", new Vector4(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, (float)GetTimeDecimal()));
                     if (OnGameTimeChanged != null)
                     {
                         OnGameTimeChanged(this, m_gameTime);
@@ -78,12 +86,15 @@ namespace WorldAPI
         public event TimeChangedEventHandler OnGameTimeChanged;
 
         /// <summary>
-        /// Get time in scientific decimal format ie hours.minutes
+        /// Get time in scientific decimal format accurate to millisecond  0.0000 .. 23.9999 ie hours.minutessecsmillisecs
         /// </summary>
-        /// <returns></returns>
-        public float GetTimeDecimal()
+        /// <returns>Game time as a decimal value</returns>
+        public double GetTimeDecimal()
         {
-            return m_gameTime.Hour + (m_gameTime.Minute/60f) + (m_gameTime.Second/3600f);
+            return ((double)m_gameTime.Hour) + 
+                TimeSpan.FromMinutes(m_gameTime.Minute).TotalHours + 
+                TimeSpan.FromSeconds(m_gameTime.Second).TotalHours +
+                TimeSpan.FromMilliseconds(m_gameTime.Millisecond).TotalHours;
         }
 
         #endregion
@@ -101,6 +112,7 @@ namespace WorldAPI
                 if (m_playerLocation != value)
                 {
                     m_playerLocation = value;
+                    Shader.SetGlobalVector("_WAPI_PlayerLocation", m_playerLocation);
                     if (OnPlayerLocationChanged != null)
                     {
                         OnPlayerLocationChanged(this, m_playerLocation);
@@ -115,15 +127,16 @@ namespace WorldAPI
         /// </summary>
         public float SeaLevel
         {
-            get { return m_seaLevel; }
+            get { return m_seaData.x; }
             set
             {
-                if (m_seaLevel != value)
+                if (m_seaData.x != value)
                 {
-                    m_seaLevel = value;
+                    m_seaData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Sea", m_seaData);
                     if (OnSeaLevelChanged != null)
                     {
-                        OnSeaLevelChanged(this, m_seaLevel);
+                        OnSeaLevelChanged(this, m_seaData.x);
                     }
                 }
             }
@@ -135,15 +148,16 @@ namespace WorldAPI
         /// </summary>
         public float Latitude
         {
-            get { return m_latLong.x; }
+            get { return m_latLon.x; }
             set
             {
-                if (m_latLong.x != value)
+                if (m_latLon.x != value)
                 {
-                    m_latLong.x = value;
+                    m_latLon.x = value;
+                    Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
                     if (OnLatitudeChanged != null)
                     {
-                        OnLatitudeChanged(this, m_latLong.x);
+                        OnLatitudeChanged(this, m_latLon.x);
                     }
                 }
             }
@@ -155,15 +169,16 @@ namespace WorldAPI
         /// </summary>
         public float Longitude
         {
-            get { return m_latLong.y; }
+            get { return m_latLon.y; }
             set
             {
-                if (m_latLong.y != value)
+                if (m_latLon.y != value)
                 {
-                    m_latLong.y = value;
+                    m_latLon.y = value;
+                    Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
                     if (OnLongitudeChanged != null)
                     {
-                        OnLongitudeChanged(this, m_latLong.y);
+                        OnLongitudeChanged(this, m_latLon.y);
                     }
                 }                
             }
@@ -181,6 +196,7 @@ namespace WorldAPI
                 if (m_sceneGroundCenter != value)
                 {
                     m_sceneGroundCenter = value;
+                    Shader.SetGlobalVector("_WAPI_SceneGroundCenter", m_sceneGroundCenter);
                     if (OnSceneGroundCenterChanged != null)
                     {
                         OnSceneGroundCenterChanged(this, m_sceneGroundCenter);
@@ -201,6 +217,7 @@ namespace WorldAPI
                 if (m_sceneCenter != value)
                 {
                     m_sceneCenter = value;
+                    Shader.SetGlobalVector("_WAPI_SceneCenter", m_sceneCenter);
                     if (OnSceneCenterChanged != null)
                     {
                         OnSceneCenterChanged(this, m_sceneCenter);
@@ -221,6 +238,7 @@ namespace WorldAPI
                 if (m_sceneSize != value)
                 {
                     m_sceneSize = value;
+                    Shader.SetGlobalVector("_WAPI_SceneSize", m_sceneSize);
                     if (OnSceneSizeChanged != null)
                     {
                         OnSceneSizeChanged(this, m_sceneSize);
@@ -245,6 +263,7 @@ namespace WorldAPI
                 if (m_tempAndHumidity.x != value)
                 {
                     m_tempAndHumidity.x = value;
+                    Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
                     if (OnTemperatureChanged != null)
                     {
                         OnTemperatureChanged(this, m_tempAndHumidity.x);
@@ -265,6 +284,7 @@ namespace WorldAPI
                 if (m_tempAndHumidity.y != value)
                 {
                     m_tempAndHumidity.y = value;
+                    Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
                     if (OnHumidityChanged != null)
                     {
                         OnHumidityChanged(this, m_tempAndHumidity.y);
@@ -289,6 +309,7 @@ namespace WorldAPI
                 if (m_windData.x != (value % 360f))
                 {
                     m_windData.x = value % 360f;
+                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
                     if (OnWindDirectionChanged != null)
                     {
                         OnWindDirectionChanged(this, m_windData.x);
@@ -309,6 +330,7 @@ namespace WorldAPI
                 if (m_windData.y != value)
                 {
                     m_windData.y = value;
+                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
                     if (OnWindSpeedChanged != null)
                     {
                         OnWindSpeedChanged(this, m_windData.y);
@@ -329,6 +351,7 @@ namespace WorldAPI
                 if (m_windData.z != value)
                 {
                     m_windData.z = value;
+                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
                     if (OnWindTurbulenceChanged != null)
                     {
                         OnWindTurbulenceChanged(this, m_windData.z);
@@ -353,6 +376,7 @@ namespace WorldAPI
                 if (m_fogData.x != value)
                 {
                     m_fogData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
                     if (OnFogPowerChanged != null)
                     {
                         OnFogPowerChanged(this, m_fogData.x);
@@ -373,6 +397,7 @@ namespace WorldAPI
                 if (m_fogData.y != value)
                 {
                     m_fogData.y = value;
+                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
                     if (OnFogMinHeightChanged != null)
                     {
                         OnFogMinHeightChanged(this, m_fogData.y);
@@ -393,6 +418,7 @@ namespace WorldAPI
                 if (m_fogData.z != value)
                 {
                     m_fogData.z = value;
+                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
                     if (OnFogMaxHeightChanged != null)
                     {
                         OnFogMaxHeightChanged(this, m_fogData.z);
@@ -417,6 +443,7 @@ namespace WorldAPI
                 if (m_rainData.x != value)
                 {
                     m_rainData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
                     if (OnRainPowerChanged != null)
                     {
                         OnRainPowerChanged(this, m_rainData.x);
@@ -437,6 +464,7 @@ namespace WorldAPI
                 if (m_rainData.y != value)
                 {
                     m_rainData.y = value;
+                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
                     if (OnRainMinHeightChanged != null)
                     {
                         OnRainMinHeightChanged(this, m_rainData.y);
@@ -457,6 +485,7 @@ namespace WorldAPI
                 if (m_rainData.z != value)
                 {
                     m_rainData.z = value;
+                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
                     if (OnRainMaxHeightChanged != null)
                     {
                         OnRainMaxHeightChanged(this, m_rainData.z);
@@ -481,6 +510,7 @@ namespace WorldAPI
                 if (m_haildata.x != value)
                 {
                     m_haildata.x = value;
+                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
                     if (OnHailPowerChanged != null)
                     {
                         OnHailPowerChanged(this, m_haildata.x);
@@ -501,6 +531,7 @@ namespace WorldAPI
                 if (m_haildata.y != value)
                 {
                     m_haildata.y = value;
+                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
                     if (OnHailMinHeightChanged != null)
                     {
                         OnHailMinHeightChanged(this, m_haildata.y);
@@ -521,6 +552,7 @@ namespace WorldAPI
                 if (m_haildata.z != value)
                 {
                     m_haildata.z = value;
+                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
                     if (OnHailMaxHeightChanged != null)
                     {
                         OnHailMaxHeightChanged(this, m_haildata.z);
@@ -545,6 +577,7 @@ namespace WorldAPI
                 if (m_snowData.x != value)
                 {
                     m_snowData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
                     if (OnSnowPowerChanged != null)
                     {
                         OnSnowPowerChanged(this, m_snowData.x);
@@ -565,6 +598,7 @@ namespace WorldAPI
                 if (m_snowData.y != value)
                 {
                     m_snowData.y = value;
+                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
                     if (OnSnowMinHeightChanged != null)
                     {
                         OnSnowMinHeightChanged(this, m_snowData.y);
@@ -585,6 +619,7 @@ namespace WorldAPI
                 if (m_snowData.z != value)
                 {
                     m_snowData.z = value;
+                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
                     if (OnSnowMaxHeightChanged != null)
                     {
                         OnSnowMaxHeightChanged(this, m_snowData.z);
@@ -605,6 +640,7 @@ namespace WorldAPI
                 if (m_snowData.w != value)
                 {
                     m_snowData.w = value;
+                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
                     if (OnSnowAgeChanged != null)
                     {
                         OnSnowAgeChanged(this, m_snowData.w);
@@ -623,15 +659,16 @@ namespace WorldAPI
         /// </summary>
         public float ThunderPower
         {
-            get { return m_thunderPower; }
+            get { return m_thunderData.x; }
             set
             {
-                if (m_thunderPower != value)
+                if (m_thunderData.x != value)
                 {
-                    m_thunderPower = value;
+                    m_thunderData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Thunder", m_thunderData);
                     if (OnThunderPowerChanged != null)
                     {
-                        OnThunderPowerChanged(this, m_thunderPower);
+                        OnThunderPowerChanged(this, m_thunderData.x);
                     }
                 }
             }
@@ -647,15 +684,16 @@ namespace WorldAPI
         /// </summary>
         public float CloudPower
         {
-            get { return m_cloudCoverData.x; }
+            get { return m_cloudData.x; }
             set
             {
-                if (m_cloudCoverData.x != value)
+                if (m_cloudData.x != value)
                 {
-                    m_cloudCoverData.x = value;
+                    m_cloudData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
                     if (OnCloudPowerChanged != null)
                     {
-                        OnCloudPowerChanged(this, m_cloudCoverData.x);
+                        OnCloudPowerChanged(this, m_cloudData.x);
                     }
                 }
             }
@@ -667,15 +705,16 @@ namespace WorldAPI
         /// </summary>
         public float CloudMinHeight
         {
-            get { return m_cloudCoverData.y; }
+            get { return m_cloudData.y; }
             set
             {
-                if (m_cloudCoverData.y != value)
+                if (m_cloudData.y != value)
                 {
-                    m_cloudCoverData.y = value;
+                    m_cloudData.y = value;
+                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
                     if (OnCloudMinHeightChanged!= null)
                     {
-                        OnCloudMinHeightChanged(this, m_cloudCoverData.y);
+                        OnCloudMinHeightChanged(this, m_cloudData.y);
                     }
                 }
             }
@@ -687,15 +726,16 @@ namespace WorldAPI
         /// </summary>
         public float CloudMaxHeight
         {
-            get { return m_cloudCoverData.z; }
+            get { return m_cloudData.z; }
             set
             {
-                if (m_cloudCoverData.z != value)
+                if (m_cloudData.z != value)
                 {
-                    m_cloudCoverData.z = value;
+                    m_cloudData.z = value;
+                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
                     if (OnCloudMaxHeightChanged != null)
                     {
-                        OnCloudMaxHeightChanged(this, m_cloudCoverData.z);
+                        OnCloudMaxHeightChanged(this, m_cloudData.z);
                     }
                 }
             }
@@ -711,15 +751,16 @@ namespace WorldAPI
         /// </summary>
         public float MoonPhase
         {
-            get { return m_moonPhase; }
+            get { return m_moonData.x; }
             set
             {
-                if (m_moonPhase != value)
+                if (m_moonData.x != value)
                 {
-                    m_moonPhase = value;
+                    m_moonData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Moon", m_moonData);
                     if (OnMoonPhaseChanged != null)
                     {
-                        OnMoonPhaseChanged(this, m_moonPhase);
+                        OnMoonPhaseChanged(this, m_moonData.x);
                     }
                 }
             }
@@ -735,15 +776,16 @@ namespace WorldAPI
         /// </summary>
         public float Season
         {
-            get { return m_season; }
+            get { return m_seasonData.x; }
             set
             {
-                if (m_season != value)
+                if (m_seasonData.x != value)
                 {
-                    m_season = value;
+                    m_seasonData.x = value;
+                    Shader.SetGlobalVector("_WAPI_Season", m_seasonData);
                     if (OnSeasonChanged != null)
                     {
-                        OnSeasonChanged(this, m_season);
+                        OnSeasonChanged(this, m_seasonData.x);
                     }
                 }
             }
@@ -759,15 +801,16 @@ namespace WorldAPI
         /// </summary>
         public float VolumeEnvironment
         {
-            get { return m_ambienceVolumes.x; }
+            get { return m_soundVolumes.x; }
             set
             {
-                if (m_ambienceVolumes.x != value)
+                if (m_soundVolumes.x != value)
                 {
-                    m_ambienceVolumes.x = value;
+                    m_soundVolumes.x = value;
+                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
                     if (OnVolumeEnvironmentChanged != null)
                     {
-                        OnVolumeEnvironmentChanged(this, m_ambienceVolumes.x);
+                        OnVolumeEnvironmentChanged(this, m_soundVolumes.x);
                     }
                 }
             }
@@ -779,15 +822,16 @@ namespace WorldAPI
         /// </summary>
         public float VolumeNPC
         {
-            get { return m_ambienceVolumes.y; }
+            get { return m_soundVolumes.y; }
             set
             {
-                if (m_ambienceVolumes.y != value)
+                if (m_soundVolumes.y != value)
                 {
-                    m_ambienceVolumes.y = value;
+                    m_soundVolumes.y = value;
+                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
                     if (OnNPCVolumeChanged != null)
                     {
-                        OnNPCVolumeChanged(this, m_ambienceVolumes.y);
+                        OnNPCVolumeChanged(this, m_soundVolumes.y);
                     }
                 }
             }
@@ -799,15 +843,16 @@ namespace WorldAPI
         /// </summary>
         public float VolumeAnimals
         {
-            get { return m_ambienceVolumes.z; }
+            get { return m_soundVolumes.z; }
             set
             {
-                if (m_ambienceVolumes.z != value)
+                if (m_soundVolumes.z != value)
                 {
-                    m_ambienceVolumes.z = value;
+                    m_soundVolumes.z = value;
+                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
                     if (OnVolumeAnimalsChanged != null)
                     {
-                        OnVolumeAnimalsChanged(this, m_ambienceVolumes.z);
+                        OnVolumeAnimalsChanged(this, m_soundVolumes.z);
                     }
                 }
             }
@@ -819,15 +864,16 @@ namespace WorldAPI
         /// </summary>
         public float VolumeWeather
         {
-            get { return m_ambienceVolumes.w; }
+            get { return m_soundVolumes.w; }
             set
             {
-                if (m_ambienceVolumes.w != value)
+                if (m_soundVolumes.w != value)
                 {
-                    m_ambienceVolumes.w = value;
+                    m_soundVolumes.w = value;
+                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
                     if (OnVolumeWeatherChanged != null)
                     {
-                        OnVolumeWeatherChanged(this, m_ambienceVolumes.w);
+                        OnVolumeWeatherChanged(this, m_soundVolumes.w);
                     }
                 }
             }
@@ -854,7 +900,7 @@ namespace WorldAPI
 
         //Latitude & longitude
         [SerializeField]
-        protected Vector4 m_latLong = new Vector4();
+        protected Vector4 m_latLon = new Vector4();
 
         //Ground level, center of scene, world units
         [SerializeField]
@@ -870,7 +916,7 @@ namespace WorldAPI
 
         //Sea level in world units
         [SerializeField]
-        protected float m_seaLevel = 50f;
+        protected Vector4 m_seaData;
 
         //Wind direction in degrees (0..360), speed in m/sec, turbulence
         [SerializeField]
@@ -881,7 +927,7 @@ namespace WorldAPI
 
         //Cloud cover 0 none .. 1 full, cloud cover min height world units, cloud cover max height world units
         [SerializeField]
-        protected Vector4 m_cloudCoverData;
+        protected Vector4 m_cloudData;
 
         //Fog power, min height world units /m, max height world units /m
         [SerializeField]
@@ -897,23 +943,23 @@ namespace WorldAPI
 
         //Snow power 0..1, min height m, max height m, age 0..1
         [SerializeField]
-        protected Vector4 m_snowData = new Vector4();
+        protected Vector4 m_snowData;
 
         //Thunder power 0..1
         [SerializeField]
-        protected float m_thunderPower = 0f;
+        protected Vector4 m_thunderData;
 
         //Ambience volumes - global, npcs, animals, weather
         [SerializeField]
-        protected Vector4 m_ambienceVolumes = new Vector4(1f, 1f, 1f, 1f);
+        protected Vector4 m_soundVolumes = new Vector4(1f, 1f, 1f, 1f);
 
         //Season 0..4
         [SerializeField]
-        protected float m_season = 0f;
+        protected Vector4 m_seasonData;
 
         //Moon phase 0 none .. 1 full
         [SerializeField]
-        protected float m_moonPhase = 0f;
+        protected Vector4 m_moonData;
 
         #endregion
 

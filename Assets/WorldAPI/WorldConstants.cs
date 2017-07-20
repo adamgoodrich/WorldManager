@@ -9,7 +9,7 @@
         /// Version information
         /// </summary>
         public static readonly string MajorVersion = "1";
-        public static readonly string MinorVersion = "0.0 a 0719";
+        public static readonly string MinorVersion = "0.0 a 0721";
 
         /// <summary>
         /// CTS Present define
