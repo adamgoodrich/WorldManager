@@ -22,7 +22,7 @@ To receive events when values are changed connect up the event handlers e.g.
 To stop receiving events when values change disconnect your handler e.g.
     WorldManager.Instance.OnApiChangedHandler -= YourHandler()
 
-To use as global variables in shaders the general naming standard is \\_WAPI\\_[PropertyName], however in many instances the data has been stored in vectors for efficient transfer to the GPU, so take a peek at the code to get the naming. At the very least however all shader variables are prefixed with \\_WAPI\\_.
+To use as global variables in shaders the general naming standard is \_WAPI\_[PropertyName], however in many instances the data has been stored in vectors for efficient transfer to the GPU, so take a peek at the code to get the naming. At the very least however all shader variables are prefixed with \_WAPI\_.
 
 ## API Categories
 
