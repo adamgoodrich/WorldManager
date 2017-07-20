@@ -5,7 +5,7 @@ WorldManager allows you to control the components that render your environment i
 
 The intention is to bridge the gap between assets and make it easier to develop games by plugging them together using a common API. You will still configure assets individually to your own taste, but coordination and control is generic and centralised.
 
-Assets can choose which parts of the API they implement and regardless of how much they support, you will still get  value from this system because of the way it coordinates theeir behaviour.
+Assets can choose which parts of the API they implement and regardless of how much they support, you will still get  value from this system because of the way it coordinates their behaviour.
 
 To generate events, and get and set values use the following generic format e.g. 
     WorldManager.Instance.Api()
