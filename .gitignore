@@ -32,3 +32,9 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+Assets/CTS/
+
+Assets/CTS\.meta
+
+ProjectSettings/
