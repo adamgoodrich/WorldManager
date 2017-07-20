@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-using UnityEngine.Rendering;
+﻿using UnityEditor;
 
 namespace WorldAPI
 {
@@ -12,7 +10,7 @@ namespace WorldAPI
     {
         static CompilerDefinesEditor()
         {
-            //Make sure we inject CTS_PRESENT
+            //Make sure we inject WORLDAPI_PRESENT
             var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             if (!symbols.Contains(WorldConstants.WAPIPresentSymbol))
             {

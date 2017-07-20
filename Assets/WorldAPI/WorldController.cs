@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-#if WORLDAPI_PRESENT
 namespace WorldAPI
 {
     /// <summary>
@@ -45,4 +44,3 @@ namespace WorldAPI
 
     }
 }
-#endif
