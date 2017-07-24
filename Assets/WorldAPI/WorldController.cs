@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace WorldAPI
+namespace WAPI
 {
     /// <summary>
     /// A sample controller and interface for the world manager

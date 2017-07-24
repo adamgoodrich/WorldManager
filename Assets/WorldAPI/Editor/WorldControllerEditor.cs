@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace WorldAPI
+namespace WAPI
 {
     /// <summary>
     /// Editor script for world API sample controller

@@ -1,4 +1,4 @@
-﻿namespace WorldAPI
+﻿namespace WAPI
 {
     /// <summary>
     /// Constants for World API

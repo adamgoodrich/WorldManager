@@ -40,3 +40,13 @@ To use as global variables in shaders the general naming standard is \_WAPI\_[Pr
 * Moon
 * Season
 * Sound Levels
+* Extensions
+* Serialisation
+
+## Serialisation system
+
+The serialisation system allows you to manage the process of saving and loading WAPI data. The choice of when to do this and how to store the serialised data are up to you.
+
+## Extension system
+
+The extension system allows you to create your own extension sub classes and add them to WAPI to be managed. You could add additional game state information as well handlers for Update and LateUpdate and have them called on your extensions when World Manager updates. Just derive your class from WorldManagerExtension, and add it to the extensions list.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WorldAPI
+namespace WAPI
 {
     /// <summary>
     /// 

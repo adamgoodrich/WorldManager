@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace WorldAPI
+namespace WAPI
 {
     /// <summary>
     /// Remove World API compiler defines if deleted

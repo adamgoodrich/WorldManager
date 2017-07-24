@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WorldAPI
+namespace WAPI
 {
     /// <summary>
     /// 
