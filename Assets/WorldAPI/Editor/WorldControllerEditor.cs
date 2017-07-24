@@ -17,7 +17,9 @@ namespace WorldAPI
         private GUIStyle m_descWrapStyle;
         private bool m_showTooltips = true;
         private bool m_globalHelp = false;
+        #pragma warning disable 414
         private WorldController m_controller;
+        #pragma warning restore 414
 
         /// <summary>
         /// Called when we select this object
@@ -101,9 +103,9 @@ namespace WorldAPI
 
             if (m_globalHelp)
             {
-                if (GUILayout.Button(GetLabel("View Online Tutorials & Docs")))
+                if (GUILayout.Button(GetLabel("View Online Forum")))
                 {
-                    Application.OpenURL("http://www.procedural-worlds.com/cts/");
+                    Application.OpenURL("https://forum.unity3d.com/threads/world-manager-generic-world-management-system.484239/");
                 }
             }
 
@@ -117,7 +119,6 @@ namespace WorldAPI
             GUILayout.BeginVertical("Control", m_boxStyle);
             GUILayout.Space(20f);
             DrawHelpSectionLabel("Control");
-
 
             GUILayout.BeginVertical(m_boxStyle);
 
@@ -279,18 +280,13 @@ namespace WorldAPI
         /// </summary>
         static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
         {
-            { "Overview", "    The CTS Weather Manager provides a simple interface to allow you to control the way the currently selected terrain material responds to weather changes.\n\nUse the control panel below to change the settings, or alternatively use the properties on the weather manager object in your scripts to change it.\n\nNOTE: These settings will not change your profile, and when you update your profile it will overwrite the terrain material with its own settings until the weather manager is updated again."},
-            { "Control", "    This section allows you to control the way the weather and seasons are applied to the terrain."},
-            { "Settings", "    This section allows you to update the settings used to apply the weather and seasons to the terrain."},
+            { "Overview", "    The World Manager controller provides a simple interface test and control your world."},
+            { "Control", "    This section allows you to control your system."},
+            { "Settings", "    This section allows you to update settings."},
             { "Rain Power", "The power of the rain. This modifies texture smoothness to simulate the effect of rain."},
             { "Snow Power", "The power of the snow. This controls the strength of the snow setting applied."},
             { "Season", "The season controls the tint applied to the terrain textures to simulate seasonal shifts. Note: This tint will overwrite the any tint that may have been configured in the profile."},
             { "Min Snow Height", "The minimum height from which snow will be applied."},
-            { "Winter Tint", "The tint that will be applied in winter."},
-            { "Sprint Tint", "The tint that will be applied in spring."},
-            { "Summer Tint", "The tint that will be applied in summer."},
-            { "Autumn Tint", "The tint that will be applied in autumn."},
-
         };
     }
 }

@@ -8,11 +8,11 @@
         /// <summary>
         /// Version information
         /// </summary>
-        public static readonly string MajorVersion = "1";
-        public static readonly string MinorVersion = "0.0 a 0721";
+        public static readonly int MajorVersion = 0;
+        public static readonly int MinorVersion = 2;
 
         /// <summary>
-        /// CTS Present define
+        /// World API present define
         /// </summary>
         public static readonly string WAPIPresentSymbol = "WORLDAPI_PRESENT";
     }

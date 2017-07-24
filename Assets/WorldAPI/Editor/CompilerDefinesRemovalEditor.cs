@@ -5,7 +5,7 @@ namespace WorldAPI
     /// <summary>
     /// Remove World API compiler defines if deleted
     /// </summary>
-    public class WorldAPIRemovalEditor : UnityEditor.AssetModificationProcessor
+    class WorldAPIRemovalEditor : UnityEditor.AssetModificationProcessor
     {
         public static AssetDeleteResult OnWillDeleteAsset(string AssetPath, RemoveAssetOptions rao)
         {

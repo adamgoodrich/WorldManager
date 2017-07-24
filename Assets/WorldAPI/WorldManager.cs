@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace WorldAPI
@@ -33,9 +34,9 @@ namespace WorldAPI
     /// with _WAPI_.
     /// 
     /// </summary>
-    public class WorldManager : MonoBehaviour
+    public sealed class WorldManager : MonoBehaviour
     {
-        #region External interfaces
+        #region Interfaces
 
         #region IsActive 
 
@@ -49,8 +50,8 @@ namespace WorldAPI
             {
                 if (m_worldAPIActive != value)
                 {
+                    m_wasUpdated = true;
                     m_worldAPIActive = value;
-                    Shader.SetGlobalInt("_WAPI_WorldAPIActive", m_worldAPIActive ? 1 : 0);
                     if (OnWorldAPIActiveChanged != null)
                     {
                         OnWorldAPIActiveChanged(this, m_worldAPIActive);
@@ -75,7 +76,7 @@ namespace WorldAPI
                 if (m_gameTime != value)
                 {
                     m_gameTime = value;
-                    Shader.SetGlobalVector("_WAPI_GameTime", new Vector4(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, (float)GetTimeDecimal()));
+                    m_wasUpdated = true;
                     if (OnGameTimeChanged != null)
                     {
                         OnGameTimeChanged(this, m_gameTime);
@@ -112,7 +113,7 @@ namespace WorldAPI
                 if (m_playerLocation != value)
                 {
                     m_playerLocation = value;
-                    Shader.SetGlobalVector("_WAPI_PlayerLocation", m_playerLocation);
+                    m_wasUpdated = true;
                     if (OnPlayerLocationChanged != null)
                     {
                         OnPlayerLocationChanged(this, m_playerLocation);
@@ -133,7 +134,7 @@ namespace WorldAPI
                 if (m_seaData.x != value)
                 {
                     m_seaData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Sea", m_seaData);
+                    m_wasUpdated = true;
                     if (OnSeaLevelChanged != null)
                     {
                         OnSeaLevelChanged(this, m_seaData.x);
@@ -154,7 +155,7 @@ namespace WorldAPI
                 if (m_latLon.x != value)
                 {
                     m_latLon.x = value;
-                    Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
+                    m_wasUpdated = true;
                     if (OnLatitudeChanged != null)
                     {
                         OnLatitudeChanged(this, m_latLon.x);
@@ -175,7 +176,7 @@ namespace WorldAPI
                 if (m_latLon.y != value)
                 {
                     m_latLon.y = value;
-                    Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
+                    m_wasUpdated = true;
                     if (OnLongitudeChanged != null)
                     {
                         OnLongitudeChanged(this, m_latLon.y);
@@ -196,7 +197,7 @@ namespace WorldAPI
                 if (m_sceneGroundCenter != value)
                 {
                     m_sceneGroundCenter = value;
-                    Shader.SetGlobalVector("_WAPI_SceneGroundCenter", m_sceneGroundCenter);
+                    m_wasUpdated = true;
                     if (OnSceneGroundCenterChanged != null)
                     {
                         OnSceneGroundCenterChanged(this, m_sceneGroundCenter);
@@ -217,7 +218,7 @@ namespace WorldAPI
                 if (m_sceneCenter != value)
                 {
                     m_sceneCenter = value;
-                    Shader.SetGlobalVector("_WAPI_SceneCenter", m_sceneCenter);
+                    m_wasUpdated = true;
                     if (OnSceneCenterChanged != null)
                     {
                         OnSceneCenterChanged(this, m_sceneCenter);
@@ -238,7 +239,7 @@ namespace WorldAPI
                 if (m_sceneSize != value)
                 {
                     m_sceneSize = value;
-                    Shader.SetGlobalVector("_WAPI_SceneSize", m_sceneSize);
+                    m_wasUpdated = true;
                     if (OnSceneSizeChanged != null)
                     {
                         OnSceneSizeChanged(this, m_sceneSize);
@@ -263,7 +264,7 @@ namespace WorldAPI
                 if (m_tempAndHumidity.x != value)
                 {
                     m_tempAndHumidity.x = value;
-                    Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
+                    m_wasUpdated = true;
                     if (OnTemperatureChanged != null)
                     {
                         OnTemperatureChanged(this, m_tempAndHumidity.x);
@@ -284,7 +285,7 @@ namespace WorldAPI
                 if (m_tempAndHumidity.y != value)
                 {
                     m_tempAndHumidity.y = value;
-                    Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
+                    m_wasUpdated = true;
                     if (OnHumidityChanged != null)
                     {
                         OnHumidityChanged(this, m_tempAndHumidity.y);
@@ -309,7 +310,7 @@ namespace WorldAPI
                 if (m_windData.x != (value % 360f))
                 {
                     m_windData.x = value % 360f;
-                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
+                    m_wasUpdated = true;
                     if (OnWindDirectionChanged != null)
                     {
                         OnWindDirectionChanged(this, m_windData.x);
@@ -330,7 +331,7 @@ namespace WorldAPI
                 if (m_windData.y != value)
                 {
                     m_windData.y = value;
-                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
+                    m_wasUpdated = true;
                     if (OnWindSpeedChanged != null)
                     {
                         OnWindSpeedChanged(this, m_windData.y);
@@ -351,7 +352,7 @@ namespace WorldAPI
                 if (m_windData.z != value)
                 {
                     m_windData.z = value;
-                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
+                    m_wasUpdated = true;
                     if (OnWindTurbulenceChanged != null)
                     {
                         OnWindTurbulenceChanged(this, m_windData.z);
@@ -376,7 +377,7 @@ namespace WorldAPI
                 if (m_fogData.x != value)
                 {
                     m_fogData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
+                    m_wasUpdated = true;
                     if (OnFogPowerChanged != null)
                     {
                         OnFogPowerChanged(this, m_fogData.x);
@@ -397,7 +398,7 @@ namespace WorldAPI
                 if (m_fogData.y != value)
                 {
                     m_fogData.y = value;
-                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
+                    m_wasUpdated = true;
                     if (OnFogMinHeightChanged != null)
                     {
                         OnFogMinHeightChanged(this, m_fogData.y);
@@ -418,7 +419,7 @@ namespace WorldAPI
                 if (m_fogData.z != value)
                 {
                     m_fogData.z = value;
-                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
+                    m_wasUpdated = true;
                     if (OnFogMaxHeightChanged != null)
                     {
                         OnFogMaxHeightChanged(this, m_fogData.z);
@@ -443,7 +444,7 @@ namespace WorldAPI
                 if (m_rainData.x != value)
                 {
                     m_rainData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
+                    m_wasUpdated = true;
                     if (OnRainPowerChanged != null)
                     {
                         OnRainPowerChanged(this, m_rainData.x);
@@ -464,7 +465,7 @@ namespace WorldAPI
                 if (m_rainData.y != value)
                 {
                     m_rainData.y = value;
-                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
+                    m_wasUpdated = true;
                     if (OnRainMinHeightChanged != null)
                     {
                         OnRainMinHeightChanged(this, m_rainData.y);
@@ -485,7 +486,7 @@ namespace WorldAPI
                 if (m_rainData.z != value)
                 {
                     m_rainData.z = value;
-                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
+                    m_wasUpdated = true;
                     if (OnRainMaxHeightChanged != null)
                     {
                         OnRainMaxHeightChanged(this, m_rainData.z);
@@ -510,7 +511,7 @@ namespace WorldAPI
                 if (m_haildata.x != value)
                 {
                     m_haildata.x = value;
-                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
+                    m_wasUpdated = true;
                     if (OnHailPowerChanged != null)
                     {
                         OnHailPowerChanged(this, m_haildata.x);
@@ -531,7 +532,7 @@ namespace WorldAPI
                 if (m_haildata.y != value)
                 {
                     m_haildata.y = value;
-                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
+                    m_wasUpdated = true;
                     if (OnHailMinHeightChanged != null)
                     {
                         OnHailMinHeightChanged(this, m_haildata.y);
@@ -552,7 +553,7 @@ namespace WorldAPI
                 if (m_haildata.z != value)
                 {
                     m_haildata.z = value;
-                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
+                    m_wasUpdated = true;
                     if (OnHailMaxHeightChanged != null)
                     {
                         OnHailMaxHeightChanged(this, m_haildata.z);
@@ -577,7 +578,7 @@ namespace WorldAPI
                 if (m_snowData.x != value)
                 {
                     m_snowData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                    m_wasUpdated = true;
                     if (OnSnowPowerChanged != null)
                     {
                         OnSnowPowerChanged(this, m_snowData.x);
@@ -598,7 +599,7 @@ namespace WorldAPI
                 if (m_snowData.y != value)
                 {
                     m_snowData.y = value;
-                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                    m_wasUpdated = true;
                     if (OnSnowMinHeightChanged != null)
                     {
                         OnSnowMinHeightChanged(this, m_snowData.y);
@@ -619,7 +620,7 @@ namespace WorldAPI
                 if (m_snowData.z != value)
                 {
                     m_snowData.z = value;
-                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                    m_wasUpdated = true;
                     if (OnSnowMaxHeightChanged != null)
                     {
                         OnSnowMaxHeightChanged(this, m_snowData.z);
@@ -640,7 +641,7 @@ namespace WorldAPI
                 if (m_snowData.w != value)
                 {
                     m_snowData.w = value;
-                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                    m_wasUpdated = true;
                     if (OnSnowAgeChanged != null)
                     {
                         OnSnowAgeChanged(this, m_snowData.w);
@@ -665,7 +666,7 @@ namespace WorldAPI
                 if (m_thunderData.x != value)
                 {
                     m_thunderData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Thunder", m_thunderData);
+                    m_wasUpdated = true;
                     if (OnThunderPowerChanged != null)
                     {
                         OnThunderPowerChanged(this, m_thunderData.x);
@@ -690,7 +691,7 @@ namespace WorldAPI
                 if (m_cloudData.x != value)
                 {
                     m_cloudData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
+                    m_wasUpdated = true;
                     if (OnCloudPowerChanged != null)
                     {
                         OnCloudPowerChanged(this, m_cloudData.x);
@@ -711,7 +712,7 @@ namespace WorldAPI
                 if (m_cloudData.y != value)
                 {
                     m_cloudData.y = value;
-                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
+                    m_wasUpdated = true;
                     if (OnCloudMinHeightChanged!= null)
                     {
                         OnCloudMinHeightChanged(this, m_cloudData.y);
@@ -732,7 +733,7 @@ namespace WorldAPI
                 if (m_cloudData.z != value)
                 {
                     m_cloudData.z = value;
-                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
+                    m_wasUpdated = true;
                     if (OnCloudMaxHeightChanged != null)
                     {
                         OnCloudMaxHeightChanged(this, m_cloudData.z);
@@ -757,7 +758,7 @@ namespace WorldAPI
                 if (m_moonData.x != value)
                 {
                     m_moonData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Moon", m_moonData);
+                    m_wasUpdated = true;
                     if (OnMoonPhaseChanged != null)
                     {
                         OnMoonPhaseChanged(this, m_moonData.x);
@@ -782,7 +783,7 @@ namespace WorldAPI
                 if (m_seasonData.x != value)
                 {
                     m_seasonData.x = value;
-                    Shader.SetGlobalVector("_WAPI_Season", m_seasonData);
+                    m_wasUpdated = true;
                     if (OnSeasonChanged != null)
                     {
                         OnSeasonChanged(this, m_seasonData.x);
@@ -807,7 +808,7 @@ namespace WorldAPI
                 if (m_soundVolumes.x != value)
                 {
                     m_soundVolumes.x = value;
-                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                    m_wasUpdated = true;
                     if (OnVolumeEnvironmentChanged != null)
                     {
                         OnVolumeEnvironmentChanged(this, m_soundVolumes.x);
@@ -828,7 +829,7 @@ namespace WorldAPI
                 if (m_soundVolumes.y != value)
                 {
                     m_soundVolumes.y = value;
-                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                    m_wasUpdated = true;
                     if (OnNPCVolumeChanged != null)
                     {
                         OnNPCVolumeChanged(this, m_soundVolumes.y);
@@ -849,7 +850,7 @@ namespace WorldAPI
                 if (m_soundVolumes.z != value)
                 {
                     m_soundVolumes.z = value;
-                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                    m_wasUpdated = true;
                     if (OnVolumeAnimalsChanged != null)
                     {
                         OnVolumeAnimalsChanged(this, m_soundVolumes.z);
@@ -870,7 +871,7 @@ namespace WorldAPI
                 if (m_soundVolumes.w != value)
                 {
                     m_soundVolumes.w = value;
-                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                    m_wasUpdated = true;
                     if (OnVolumeWeatherChanged != null)
                     {
                         OnVolumeWeatherChanged(this, m_soundVolumes.w);
@@ -882,135 +883,215 @@ namespace WorldAPI
 
         #endregion
 
+        #region Extensions
+
+        /// <summary>
+        /// Extension data - store whatever you want here - if there is something in here thats not yours 
+        /// then dont touch it, as it will depend on this in some way.
+        /// </summary>
+        public List<WorldManagerDataExtension> Extensions
+        {
+            get { return m_extensionList; }
+            set { m_extensionList = value; }
+        }
+
+        #endregion
+
+        #region Serialisation / Deserialisation
+
+        /// <summary>
+        /// Serialise the content of world manager into a JSON string
+        /// </summary>
+        /// <returns>JSON serialised string containing current state of world manager</returns>
+        public string Serialise()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        /// <summary>
+        /// Deserialise the content of the world manager from the supplied string
+        /// </summary>
+        /// <param name="jsonState">State to be loaded into the manager</param>
+        public void DeSerialise(string jsonState)
+        {
+            JsonUtility.FromJsonOverwrite(jsonState, this);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Unity Update and LateUpdate methods
+
+        /// <summary>
+        /// Execute extension updates
+        /// </summary>
+        void Update()
+        {
+            for (int idx = 0; idx < m_extensionList.Count; idx++)
+            {
+                m_extensionList[idx].Update();
+            }
+        }
+
+        /// <summary>
+        /// Send changes to shader variables at the end of update cycle, and 
+        /// execute extension late updates.
+        /// </summary>
+        void LateUpdate()
+        {
+            if (m_wasUpdated)
+            {
+                //This seems heavy - perhaps faster to add additional testing
+                Shader.SetGlobalInt("_WAPI_WorldAPIActive", m_worldAPIActive ? 1 : 0);
+                Shader.SetGlobalVector("_WAPI_GameTime", new Vector4(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, (float)GetTimeDecimal()));
+                Shader.SetGlobalVector("_WAPI_PlayerLocation", m_playerLocation);
+                Shader.SetGlobalVector("_WAPI_Sea", m_seaData);
+                Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
+                Shader.SetGlobalVector("_WAPI_SceneGroundCenter", m_sceneGroundCenter);
+                Shader.SetGlobalVector("_WAPI_SceneCenter", m_sceneCenter);
+                Shader.SetGlobalVector("_WAPI_SceneSize", m_sceneSize);
+                Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
+                Shader.SetGlobalVector("_WAPI_Wind", m_windData);
+                Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
+                Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
+                Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
+                Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                Shader.SetGlobalVector("_WAPI_Thunder", m_thunderData);
+                Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
+                Shader.SetGlobalVector("_WAPI_Moon", m_moonData);
+                Shader.SetGlobalVector("_WAPI_Season", m_seasonData);
+                Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+
+                //Flag as done
+                m_wasUpdated = false;
+            }
+
+            //Give extensions a crack as well
+            for (int idx = 0; idx < m_extensionList.Count; idx++)
+            {
+                m_extensionList[idx].LateUpdate();
+            }
+        }
+
         #endregion
 
         #region Serialised data - in vector4's where possible to make it easier to send to shaders
 
+        //World API shader vars need update
+        private bool m_wasUpdated = false;
+
         //World API active
         [SerializeField]
-        protected bool m_worldAPIActive = true;
+        private bool m_worldAPIActive = true;
 
         //Game time
         [SerializeField]
-        protected DateTime m_gameTime;
+        private DateTime m_gameTime;
 
         //Player location
         [SerializeField]
-        protected Vector3 m_playerLocation;
+        private Vector3 m_playerLocation;
 
         //Latitude & longitude
         [SerializeField]
-        protected Vector4 m_latLon = new Vector4();
+        private Vector4 m_latLon = new Vector4();
 
         //Ground level, center of scene, world units
         [SerializeField]
-        protected Vector3 m_sceneGroundCenter;
+        private Vector3 m_sceneGroundCenter;
 
         //Center of scene, world units
         [SerializeField]
-        protected Vector3 m_sceneCenter;
+        private Vector3 m_sceneCenter;
 
         //Size of the scene in world units
         [SerializeField]
-        protected Vector3 m_sceneSize;
+        private Vector3 m_sceneSize;
 
         //Sea level in world units
         [SerializeField]
-        protected Vector4 m_seaData;
+        private Vector4 m_seaData;
 
         //Wind direction in degrees (0..360), speed in m/sec, turbulence
         [SerializeField]
-        protected Vector4 m_windData;
+        private Vector4 m_windData;
 
         //Temperature degrees centigrade, and humidity
-        protected Vector4 m_tempAndHumidity;
+        private Vector4 m_tempAndHumidity;
 
         //Cloud cover 0 none .. 1 full, cloud cover min height world units, cloud cover max height world units
         [SerializeField]
-        protected Vector4 m_cloudData;
+        private Vector4 m_cloudData;
 
         //Fog power, min height world units /m, max height world units /m
         [SerializeField]
-        protected Vector4 m_fogData;
+        private Vector4 m_fogData;
 
         //Rain power, min height world units /m, max height world units /m
         [SerializeField]
-        protected Vector4 m_rainData;
+        private Vector4 m_rainData;
 
         //Hail power, min height world units /m, max height world units /m
         [SerializeField]
-        protected Vector4 m_haildata;
+        private Vector4 m_haildata;
 
         //Snow power 0..1, min height m, max height m, age 0..1
         [SerializeField]
-        protected Vector4 m_snowData;
+        private Vector4 m_snowData;
 
         //Thunder power 0..1
         [SerializeField]
-        protected Vector4 m_thunderData;
+        private Vector4 m_thunderData;
 
         //Ambience volumes - global, npcs, animals, weather
         [SerializeField]
-        protected Vector4 m_soundVolumes = new Vector4(1f, 1f, 1f, 1f);
+        private Vector4 m_soundVolumes = new Vector4(1f, 1f, 1f, 1f);
 
         //Season 0..4
         [SerializeField]
-        protected Vector4 m_seasonData;
+        private Vector4 m_seasonData;
 
         //Moon phase 0 none .. 1 full
         [SerializeField]
-        protected Vector4 m_moonData;
+        private Vector4 m_moonData;
 
-        #endregion
+        //Extension data - placeholder for anything else you may want to store with world manager
+        [SerializeField]
+        private List<WorldManagerDataExtension> m_extensionList = new List<WorldManagerDataExtension>();
 
-        #region Delegates
+        //Delegates 
         public delegate void BoolChangedEventHandler(WorldManager wm, bool newValue);
         public delegate void Vector3ChangedEventHandler(WorldManager wm, Vector3 newValue);
         public delegate void FloatChangedEventHandler(WorldManager wm, float newValue);
         public delegate void TimeChangedEventHandler(WorldManager wm, DateTime newValue);
         #endregion
 
-        #region Singleton / class management
+        #region Singleton & class management
 
-        //Stop people from instantiating directly
-        protected WorldManager() {}
+        //Stop people from instantiating directly because its a singleton
+        private WorldManager() {}
 
         //This is a singleton - here is the instance
         private static WorldManager m_instance;
-
-        //Locking mechanism for access
-        private static object m_lock = new object();
 
         //Access to the world manager instance
         public static WorldManager Instance
         {
             get
             {
-                lock (m_lock)
+                if (m_instance == null)
                 {
+                    m_instance = (WorldManager)FindObjectOfType(typeof(WorldManager));
                     if (m_instance == null)
                     {
-                        m_instance = (WorldManager)FindObjectOfType(typeof(WorldManager));
-
-                        if (FindObjectsOfType(typeof(WorldManager)).Length > 1)
-                        {
-                            return m_instance;
-                        }
-
-                        if (m_instance == null)
-                        {
-                            GameObject singleton = new GameObject();
-                            m_instance = singleton.AddComponent<WorldManager>();
-                            singleton.name = typeof(WorldManager).ToString();
-                            if (Application.isPlaying)
-                            {
-                                DontDestroyOnLoad(singleton);
-                            }
-                        }
+                        GameObject singleton = new GameObject();
+                        singleton.hideFlags = HideFlags.HideAndDontSave;
+                        singleton.name = typeof(WorldManager).ToString();
+                        m_instance = singleton.AddComponent<WorldManager>();
                     }
-
-                    return m_instance;
                 }
+                return m_instance;
             }
         }
 
