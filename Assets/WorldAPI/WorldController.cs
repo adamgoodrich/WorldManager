@@ -6,7 +6,7 @@ namespace WAPI
     /// <summary>
     /// A sample controller and interface for the world manager
     /// </summary>
-    public class WorldController : MonoBehaviour
+    public class WorldController : MonoBehaviour, IWorldApiChangeHandler
     {
         public bool m_allowKeyboardControl = true;
         public float m_timeNow;
@@ -24,23 +24,25 @@ namespace WAPI
 
         void OnDestroy()
         {
-            //DisconnectFromWorldAPI();
+            DisconnectFromWorldAPI();
         }
 
         void ConnectToWorldAPI()
         {
-            WorldManager.Instance.OnGameTimeChanged += OnGameTimeChanged;
+            WorldManager.Instance.AddListener(this);            
         }
 
         void DisconnectFromWorldAPI()
         {
-            WorldManager.Instance.OnGameTimeChanged -= OnGameTimeChanged;
+            WorldManager.Instance.RemoveListener(this);
         }
 
-        public void OnGameTimeChanged(WorldManager wm, DateTime newTime)
+        public void OnWorldChanged(WorldChangeArgs changeArgs)
         {
-            m_timeNow = newTime.Hour + (newTime.Minute / 60f) + (newTime.Second / 3600f);
+            if (changeArgs.HasChanged(WorldConstants.WorldChangeEvents.GameTimeChanged))
+            {
+                m_timeNow = (float)changeArgs.manager.GetTimeDecimal();
+            }
         }
-
     }
 }

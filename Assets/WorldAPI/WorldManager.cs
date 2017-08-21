@@ -50,16 +50,12 @@ namespace WAPI
             {
                 if (m_worldAPIActive != value)
                 {
-                    m_wasUpdated = true;
                     m_worldAPIActive = value;
-                    if (OnWorldAPIActiveChanged != null)
-                    {
-                        OnWorldAPIActiveChanged(this, m_worldAPIActive);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.ManagerActiveChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event BoolChangedEventHandler OnWorldAPIActiveChanged;
 
         #endregion
 
@@ -76,15 +72,11 @@ namespace WAPI
                 if (m_gameTime != value)
                 {
                     m_gameTime = value;
-                    m_wasUpdated = true;
-                    if (OnGameTimeChanged != null)
-                    {
-                        OnGameTimeChanged(this, m_gameTime);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.GameTimeChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event TimeChangedEventHandler OnGameTimeChanged;
 
         /// <summary>
         /// Get time in scientific decimal format accurate to millisecond  0.0000 .. 23.9999 ie hours.minutessecsmillisecs
@@ -103,25 +95,21 @@ namespace WAPI
         #region Player Location, Sea Level, Lat / Lng, Scene sizes
 
         /// <summary>
-        /// Player location world units - useful as a lot of FX require a location to work effectively
+        /// Player object - the player / object that holds the main game camera
         /// </summary>
-        public Vector3 PlayerLocation
+        public GameObject PlayerObject
         {
-            get { return m_playerLocation; }
+            get { return m_playerObject; }
             set
             {
-                if (m_playerLocation != value)
+                if (m_playerObject != value)
                 {
-                    m_playerLocation = value;
-                    m_wasUpdated = true;
-                    if (OnPlayerLocationChanged != null)
-                    {
-                        OnPlayerLocationChanged(this, m_playerLocation);
-                    }
+                    m_playerObject = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.PlayerChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event Vector3ChangedEventHandler OnPlayerLocationChanged;
 
         /// <summary>
         /// Sea Level - world units
@@ -134,15 +122,11 @@ namespace WAPI
                 if (m_seaData.x != value)
                 {
                     m_seaData.x = value;
-                    m_wasUpdated = true;
-                    if (OnSeaLevelChanged != null)
-                    {
-                        OnSeaLevelChanged(this, m_seaData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SeaChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSeaLevelChanged;
 
         /// <summary>
         /// Latitude
@@ -155,15 +139,11 @@ namespace WAPI
                 if (m_latLon.x != value)
                 {
                     m_latLon.x = value;
-                    m_wasUpdated = true;
-                    if (OnLatitudeChanged != null)
-                    {
-                        OnLatitudeChanged(this, m_latLon.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.LatLngChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnLatitudeChanged;
 
         /// <summary>
         /// Longitude
@@ -176,15 +156,11 @@ namespace WAPI
                 if (m_latLon.y != value)
                 {
                     m_latLon.y = value;
-                    m_wasUpdated = true;
-                    if (OnLongitudeChanged != null)
-                    {
-                        OnLongitudeChanged(this, m_latLon.y);
-                    }
-                }                
+                    m_changeMask |= WorldConstants.WorldChangeEvents.LatLngChanged;
+                    RaiseEvent();
+                }
             }
         }
-        public event FloatChangedEventHandler OnLongitudeChanged;
 
         /// <summary>
         /// Ground level at center of scene in world units - useful for placement
@@ -197,15 +173,11 @@ namespace WAPI
                 if (m_sceneGroundCenter != value)
                 {
                     m_sceneGroundCenter = value;
-                    m_wasUpdated = true;
-                    if (OnSceneGroundCenterChanged != null)
-                    {
-                        OnSceneGroundCenterChanged(this, m_sceneGroundCenter);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SceneMetricsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event Vector3ChangedEventHandler OnSceneGroundCenterChanged;
 
         /// <summary>
         /// Center of scene in world units - useful for placement
@@ -218,15 +190,11 @@ namespace WAPI
                 if (m_sceneCenter != value)
                 {
                     m_sceneCenter = value;
-                    m_wasUpdated = true;
-                    if (OnSceneCenterChanged != null)
-                    {
-                        OnSceneCenterChanged(this, m_sceneCenter);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SceneMetricsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event Vector3ChangedEventHandler OnSceneCenterChanged;
 
         /// <summary>
         /// Size of the scene in world units - useful for placement
@@ -239,15 +207,11 @@ namespace WAPI
                 if (m_sceneSize != value)
                 {
                     m_sceneSize = value;
-                    m_wasUpdated = true;
-                    if (OnSceneSizeChanged != null)
-                    {
-                        OnSceneSizeChanged(this, m_sceneSize);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SceneMetricsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event Vector3ChangedEventHandler OnSceneSizeChanged;
 
         #endregion
 
@@ -264,15 +228,11 @@ namespace WAPI
                 if (m_tempAndHumidity.x != value)
                 {
                     m_tempAndHumidity.x = value;
-                    m_wasUpdated = true;
-                    if (OnTemperatureChanged != null)
-                    {
-                        OnTemperatureChanged(this, m_tempAndHumidity.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.TempAndHumidityChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnTemperatureChanged;
 
         /// <summary>
         /// Humidity
@@ -285,15 +245,11 @@ namespace WAPI
                 if (m_tempAndHumidity.y != value)
                 {
                     m_tempAndHumidity.y = value;
-                    m_wasUpdated = true;
-                    if (OnHumidityChanged != null)
-                    {
-                        OnHumidityChanged(this, m_tempAndHumidity.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.TempAndHumidityChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnHumidityChanged;
 
         #endregion
 
@@ -310,15 +266,11 @@ namespace WAPI
                 if (m_windData.x != (value % 360f))
                 {
                     m_windData.x = value % 360f;
-                    m_wasUpdated = true;
-                    if (OnWindDirectionChanged != null)
-                    {
-                        OnWindDirectionChanged(this, m_windData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.WindChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnWindDirectionChanged;
 
         /// <summary>
         /// Wind speed m/sec
@@ -331,15 +283,11 @@ namespace WAPI
                 if (m_windData.y != value)
                 {
                     m_windData.y = value;
-                    m_wasUpdated = true;
-                    if (OnWindSpeedChanged != null)
-                    {
-                        OnWindSpeedChanged(this, m_windData.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.WindChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnWindSpeedChanged;
 
         /// <summary>
         /// Wind turbulence
@@ -352,15 +300,11 @@ namespace WAPI
                 if (m_windData.z != value)
                 {
                     m_windData.z = value;
-                    m_wasUpdated = true;
-                    if (OnWindTurbulenceChanged != null)
-                    {
-                        OnWindTurbulenceChanged(this, m_windData.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.WindChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnWindTurbulenceChanged;
 
         #endregion
 
@@ -377,15 +321,11 @@ namespace WAPI
                 if (m_fogData.x != value)
                 {
                     m_fogData.x = value;
-                    m_wasUpdated = true;
-                    if (OnFogPowerChanged != null)
-                    {
-                        OnFogPowerChanged(this, m_fogData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.FogChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnFogPowerChanged;
 
         /// <summary>
         /// Minimum fog height in world units / meters
@@ -398,15 +338,11 @@ namespace WAPI
                 if (m_fogData.y != value)
                 {
                     m_fogData.y = value;
-                    m_wasUpdated = true;
-                    if (OnFogMinHeightChanged != null)
-                    {
-                        OnFogMinHeightChanged(this, m_fogData.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.FogChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnFogMinHeightChanged;
 
         /// <summary>
         /// Maximum fog height in world units / meters
@@ -419,15 +355,11 @@ namespace WAPI
                 if (m_fogData.z != value)
                 {
                     m_fogData.z = value;
-                    m_wasUpdated = true;
-                    if (OnFogMaxHeightChanged != null)
-                    {
-                        OnFogMaxHeightChanged(this, m_fogData.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.FogChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnFogMaxHeightChanged;
 
         #endregion
 
@@ -444,15 +376,11 @@ namespace WAPI
                 if (m_rainData.x != value)
                 {
                     m_rainData.x = value;
-                    m_wasUpdated = true;
-                    if (OnRainPowerChanged != null)
-                    {
-                        OnRainPowerChanged(this, m_rainData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.RainChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnRainPowerChanged;
 
         /// <summary>
         /// Minimum rain height in world units / meters
@@ -465,15 +393,11 @@ namespace WAPI
                 if (m_rainData.y != value)
                 {
                     m_rainData.y = value;
-                    m_wasUpdated = true;
-                    if (OnRainMinHeightChanged != null)
-                    {
-                        OnRainMinHeightChanged(this, m_rainData.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.RainChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnRainMinHeightChanged;
 
         /// <summary>
         /// Maximum rain height in world units / meters
@@ -486,15 +410,11 @@ namespace WAPI
                 if (m_rainData.z != value)
                 {
                     m_rainData.z = value;
-                    m_wasUpdated = true;
-                    if (OnRainMaxHeightChanged != null)
-                    {
-                        OnRainMaxHeightChanged(this, m_rainData.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.RainChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnRainMaxHeightChanged;
 
         #endregion
 
@@ -511,15 +431,11 @@ namespace WAPI
                 if (m_haildata.x != value)
                 {
                     m_haildata.x = value;
-                    m_wasUpdated = true;
-                    if (OnHailPowerChanged != null)
-                    {
-                        OnHailPowerChanged(this, m_haildata.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.HailChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnHailPowerChanged;
 
         /// <summary>
         /// Minimum hail height in world units / meters
@@ -532,15 +448,11 @@ namespace WAPI
                 if (m_haildata.y != value)
                 {
                     m_haildata.y = value;
-                    m_wasUpdated = true;
-                    if (OnHailMinHeightChanged != null)
-                    {
-                        OnHailMinHeightChanged(this, m_haildata.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.HailChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnHailMinHeightChanged;
 
         /// <summary>
         /// Maximum hail height in world units / meters
@@ -553,15 +465,11 @@ namespace WAPI
                 if (m_haildata.z != value)
                 {
                     m_haildata.z = value;
-                    m_wasUpdated = true;
-                    if (OnHailMaxHeightChanged != null)
-                    {
-                        OnHailMaxHeightChanged(this, m_haildata.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.HailChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnHailMaxHeightChanged;
 
         #endregion
 
@@ -578,15 +486,11 @@ namespace WAPI
                 if (m_snowData.x != value)
                 {
                     m_snowData.x = value;
-                    m_wasUpdated = true;
-                    if (OnSnowPowerChanged != null)
-                    {
-                        OnSnowPowerChanged(this, m_snowData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SnowChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSnowPowerChanged;
 
         /// <summary>
         /// Minimum snow height in world units / meters
@@ -599,15 +503,11 @@ namespace WAPI
                 if (m_snowData.y != value)
                 {
                     m_snowData.y = value;
-                    m_wasUpdated = true;
-                    if (OnSnowMinHeightChanged != null)
-                    {
-                        OnSnowMinHeightChanged(this, m_snowData.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SnowChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSnowMinHeightChanged;
 
         /// <summary>
         /// Maximum snow height in world units / meters
@@ -620,15 +520,11 @@ namespace WAPI
                 if (m_snowData.z != value)
                 {
                     m_snowData.z = value;
-                    m_wasUpdated = true;
-                    if (OnSnowMaxHeightChanged != null)
-                    {
-                        OnSnowMaxHeightChanged(this, m_snowData.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SnowChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSnowMaxHeightChanged;
 
         /// <summary>
         /// Snow age 0 fresh.. 1 old / crystalized
@@ -641,15 +537,11 @@ namespace WAPI
                 if (m_snowData.w != value)
                 {
                     m_snowData.w = value;
-                    m_wasUpdated = true;
-                    if (OnSnowAgeChanged != null)
-                    {
-                        OnSnowAgeChanged(this, m_snowData.w);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SnowChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSnowAgeChanged;
 
         #endregion
 
@@ -666,15 +558,11 @@ namespace WAPI
                 if (m_thunderData.x != value)
                 {
                     m_thunderData.x = value;
-                    m_wasUpdated = true;
-                    if (OnThunderPowerChanged != null)
-                    {
-                        OnThunderPowerChanged(this, m_thunderData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.ThunderChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnThunderPowerChanged;
 
         #endregion
 
@@ -691,15 +579,11 @@ namespace WAPI
                 if (m_cloudData.x != value)
                 {
                     m_cloudData.x = value;
-                    m_wasUpdated = true;
-                    if (OnCloudPowerChanged != null)
-                    {
-                        OnCloudPowerChanged(this, m_cloudData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.CloudsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnCloudPowerChanged;
 
         /// <summary>
         /// Minimum cloud height in world units / meters
@@ -712,15 +596,11 @@ namespace WAPI
                 if (m_cloudData.y != value)
                 {
                     m_cloudData.y = value;
-                    m_wasUpdated = true;
-                    if (OnCloudMinHeightChanged!= null)
-                    {
-                        OnCloudMinHeightChanged(this, m_cloudData.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.CloudsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnCloudMinHeightChanged;
 
         /// <summary>
         /// Maximum cloud height in world units / meters
@@ -733,15 +613,11 @@ namespace WAPI
                 if (m_cloudData.z != value)
                 {
                     m_cloudData.z = value;
-                    m_wasUpdated = true;
-                    if (OnCloudMaxHeightChanged != null)
-                    {
-                        OnCloudMaxHeightChanged(this, m_cloudData.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.CloudsChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnCloudMaxHeightChanged;
 
         #endregion
 
@@ -758,15 +634,11 @@ namespace WAPI
                 if (m_moonData.x != value)
                 {
                     m_moonData.x = value;
-                    m_wasUpdated = true;
-                    if (OnMoonPhaseChanged != null)
-                    {
-                        OnMoonPhaseChanged(this, m_moonData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.MoonChanged;
                 }
+                RaiseEvent();
             }
         }
-        public event FloatChangedEventHandler OnMoonPhaseChanged;
 
         #endregion
 
@@ -783,15 +655,11 @@ namespace WAPI
                 if (m_seasonData.x != value)
                 {
                     m_seasonData.x = value;
-                    m_wasUpdated = true;
-                    if (OnSeasonChanged != null)
-                    {
-                        OnSeasonChanged(this, m_seasonData.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SeasonChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnSeasonChanged;
 
         #endregion
 
@@ -808,15 +676,11 @@ namespace WAPI
                 if (m_soundVolumes.x != value)
                 {
                     m_soundVolumes.x = value;
-                    m_wasUpdated = true;
-                    if (OnVolumeEnvironmentChanged != null)
-                    {
-                        OnVolumeEnvironmentChanged(this, m_soundVolumes.x);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.VolumeChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnVolumeEnvironmentChanged;
 
         /// <summary>
         /// NPC volume
@@ -829,15 +693,11 @@ namespace WAPI
                 if (m_soundVolumes.y != value)
                 {
                     m_soundVolumes.y = value;
-                    m_wasUpdated = true;
-                    if (OnNPCVolumeChanged != null)
-                    {
-                        OnNPCVolumeChanged(this, m_soundVolumes.y);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.VolumeChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnNPCVolumeChanged;
 
         /// <summary>
         /// Animal Volume
@@ -850,15 +710,11 @@ namespace WAPI
                 if (m_soundVolumes.z != value)
                 {
                     m_soundVolumes.z = value;
-                    m_wasUpdated = true;
-                    if (OnVolumeAnimalsChanged != null)
-                    {
-                        OnVolumeAnimalsChanged(this, m_soundVolumes.z);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.VolumeChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnVolumeAnimalsChanged;
 
         /// <summary>
         /// Weather Volume
@@ -871,15 +727,11 @@ namespace WAPI
                 if (m_soundVolumes.w != value)
                 {
                     m_soundVolumes.w = value;
-                    m_wasUpdated = true;
-                    if (OnVolumeWeatherChanged != null)
-                    {
-                        OnVolumeWeatherChanged(this, m_soundVolumes.w);
-                    }
+                    m_changeMask |= WorldConstants.WorldChangeEvents.VolumeChanged;
+                    RaiseEvent();
                 }
             }
         }
-        public event FloatChangedEventHandler OnVolumeWeatherChanged;
 
         #endregion
 
@@ -928,6 +780,10 @@ namespace WAPI
         /// </summary>
         void Update()
         {
+
+
+
+
             for (int idx = 0; idx < m_extensionList.Count; idx++)
             {
                 m_extensionList[idx].Update();
@@ -935,36 +791,88 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Send changes to shader variables at the end of update cycle, and 
-        /// execute extension late updates.
+        /// Send accumulated changes to shader variables at the end of update cycle, 
+        /// executes extension late updates, and then clears the changed mask.
         /// </summary>
         void LateUpdate()
         {
-            if (m_wasUpdated)
+            if (m_changeMask != 0)
             {
                 //This seems heavy - perhaps faster to add additional testing
-                Shader.SetGlobalInt("_WAPI_WorldAPIActive", m_worldAPIActive ? 1 : 0);
-                Shader.SetGlobalVector("_WAPI_GameTime", new Vector4(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, (float)GetTimeDecimal()));
-                Shader.SetGlobalVector("_WAPI_PlayerLocation", m_playerLocation);
-                Shader.SetGlobalVector("_WAPI_Sea", m_seaData);
-                Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
-                Shader.SetGlobalVector("_WAPI_SceneGroundCenter", m_sceneGroundCenter);
-                Shader.SetGlobalVector("_WAPI_SceneCenter", m_sceneCenter);
-                Shader.SetGlobalVector("_WAPI_SceneSize", m_sceneSize);
-                Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
-                Shader.SetGlobalVector("_WAPI_Wind", m_windData);
-                Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
-                Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
-                Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
-                Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
-                Shader.SetGlobalVector("_WAPI_Thunder", m_thunderData);
-                Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
-                Shader.SetGlobalVector("_WAPI_Moon", m_moonData);
-                Shader.SetGlobalVector("_WAPI_Season", m_seasonData);
-                Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.ManagerActiveChanged) != 0)
+                {
+                    Shader.SetGlobalInt("_WAPI_WorldAPIActive", m_worldAPIActive ? 1 : 0);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.GameTimeChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_GameTime",
+                        new Vector4(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, (float) GetTimeDecimal()));
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.PlayerChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_PlayerPosition", m_playerObject.transform.position);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.SeaChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Sea", m_seaData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.LatLngChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_LatLon", m_latLon);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.SceneMetricsChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_SceneGroundCenter", m_sceneGroundCenter);
+                    Shader.SetGlobalVector("_WAPI_SceneCenter", m_sceneCenter);
+                    Shader.SetGlobalVector("_WAPI_SceneSize", m_sceneSize);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.TempAndHumidityChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_TempHumid", m_tempAndHumidity);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.WindChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Wind", m_windData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.FogChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Fog", m_fogData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.RainChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Rain", m_rainData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.HailChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Hail", m_haildata);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.SnowChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Snow", m_snowData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.ThunderChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Thunder", m_thunderData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.CloudsChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Clouds", m_cloudData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.MoonChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Moon", m_moonData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.SeasonChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Season", m_seasonData);
+                }
+                if ((m_changeMask & WorldConstants.WorldChangeEvents.VolumeChanged) != 0)
+                {
+                    Shader.SetGlobalVector("_WAPI_Sound", m_soundVolumes);
+                }
 
-                //Flag as done
-                m_wasUpdated = false;
+                //Flag all changes as done
+                m_changeMask = 0;
             }
 
             //Give extensions a crack as well
@@ -976,10 +884,72 @@ namespace WAPI
 
         #endregion
 
-        #region Serialised data - in vector4's where possible to make it easier to send to shaders
+        #region Event management
 
-        //World API shader vars need update
-        private bool m_wasUpdated = false;
+        private UInt64 m_changeMask = 0;
+        private List<IWorldApiChangeHandler> m_listeners = new List<IWorldApiChangeHandler>();
+
+        /// <summary>
+        /// Add your listener
+        /// </summary>
+        /// <param name="listener">The listener to be added</param>
+        public void AddListener(IWorldApiChangeHandler listener)
+        {
+            m_listeners.Add(listener);
+        }
+
+        /// <summary>
+        /// Remove your listener
+        /// </summary>
+        /// <param name="listener">The listener to be removed</param>
+        public void RemoveListener(IWorldApiChangeHandler listener)
+        {
+            m_listeners.Remove(listener);
+        }
+
+        /// <summary>
+        /// Raise event if something has changed
+        /// </summary>
+        void RaiseEvent()
+        {
+            //Exit if nothing changed
+            if (m_changeMask == 0)
+            {
+                return;
+            }
+
+            // Go backwards in list in case someone removes a listener
+            for (var n = m_listeners.Count - 1; n >= 0; --n)
+            {
+                var listener = m_listeners[n];
+
+                //Remove it if it no longer exists
+                if (listener == null)
+                {
+                    m_listeners.RemoveAt(n);
+                    continue;
+                }
+
+                //Send the message, trap errors, remove listener if it generates errots
+                try
+                {
+                    listener.OnWorldChanged(new WorldChangeArgs(m_changeMask, this));
+                }
+                catch (System.Exception e)
+                {
+                    //Tell world about it
+                    Debug.LogException(e, this);
+
+                    //Remove the listener that causes the exception so remaining stuff continues to work
+                    Debug.LogError("Removed listener because it caused error");
+                    m_listeners.RemoveAt(n);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Serialised data - in vector4's where possible to make it easier to send to shaders
 
         //World API active
         [SerializeField]
@@ -989,9 +959,9 @@ namespace WAPI
         [SerializeField]
         private DateTime m_gameTime;
 
-        //Player location
+        //Player object
         [SerializeField]
-        private Vector3 m_playerLocation;
+        private GameObject m_playerObject;
 
         //Latitude & longitude
         [SerializeField]
@@ -1067,7 +1037,7 @@ namespace WAPI
         public delegate void TimeChangedEventHandler(WorldManager wm, DateTime newValue);
         #endregion
 
-        #region Singleton & class management
+        #region Singleton & general class management
 
         //Stop people from instantiating directly because its a singleton
         private WorldManager() {}
