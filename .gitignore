@@ -31,7 +31,6 @@ sysinfo.txt
 
 # Builds
 *.apk
-*.unitypackage
 
 Assets/CTS/
 
