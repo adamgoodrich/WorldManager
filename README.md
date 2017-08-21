@@ -11,7 +11,7 @@ Additionally, WAPI introduces a global set of shader variables, so that any shad
 
 WAPI is free for you to use any way you like. It will be professionaly maintained, and will also be packaged up as a free unity asset (soon). For more information on WAPI go to https://forum.unity3d.com/threads/world-manager-generic-world-management-system.484239/.
 
-WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS - The Complete Terrain Shader, and Pegasus. Adam is a specialist in environmental generation in Unity, and this project was born out of frustration in getting things to work together. To get access to a free monthly newsletter with tips, tricks, reviews and freebies sign up on our home page at http://www.procedural-worlds.com/.
+WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS - The Complete Terrain Shader, and Pegasus. Adam is a specialist in environmental and procedural generation in Unity, and this project was born out of his frustration with getting things to work together. If you would like access to his free monthly newsletter with tips, tricks, reviews and freebies then sign up on his home page at http://www.procedural-worlds.com/.
 
 ## Basic Usage Pattern
 
