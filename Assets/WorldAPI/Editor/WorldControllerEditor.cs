@@ -122,6 +122,14 @@ namespace WAPI
 
             GUILayout.BeginVertical(m_boxStyle);
 
+            bool allowKeyboardControl = EditorGUILayout.Toggle(GetLabel("Keyboard Control"), m_controller.m_allowKeyboardControl);
+
+            float timeIncrement = m_controller.m_timeUpdateIncrement;
+            if (allowKeyboardControl)
+            {
+                timeIncrement = EditorGUILayout.Slider(GetLabel("Time Increment"), timeIncrement, 0f, 24f);
+            }
+
             float decimalTime = EditorGUILayout.Slider(GetLabel("Time"), (float)WorldManager.Instance.GetTimeDecimal(), 0f, 24f);
             DrawHelpLabel("Time");
 
@@ -189,9 +197,10 @@ namespace WAPI
             //Handle changes
             if (EditorGUI.EndChangeCheck())
             {
-                //CompleteTerrainShader.SetDirty(m_manager);
-
                 //UX Settings
+                m_controller.m_allowKeyboardControl = allowKeyboardControl;
+                m_controller.m_timeUpdateIncrement = timeIncrement;
+                WorldManager.Instance.SetDecimalTime(decimalTime);
                 WorldManager.Instance.SnowPower = snowPower;
                 WorldManager.Instance.SnowMinHeight = minSnowHeight;
                 WorldManager.Instance.RainPower = rainPower;

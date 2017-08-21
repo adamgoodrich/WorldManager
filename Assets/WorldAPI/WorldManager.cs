@@ -90,6 +90,22 @@ namespace WAPI
                 TimeSpan.FromMilliseconds(m_gameTime.Millisecond).TotalHours;
         }
 
+        /// <summary>
+        /// Set the decimal time eg 0.. 23.99:
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetDecimalTime(double time)
+        {
+            var ts = TimeSpan.FromHours(time);
+            var gameTime = new DateTime(m_gameTime.Year, m_gameTime.Month, m_gameTime.Day, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            if (m_gameTime != gameTime)
+            {
+                m_gameTime = gameTime;
+                m_changeMask |= WorldConstants.WorldChangeEvents.GameTimeChanged;
+                RaiseEvent();
+            }
+        }
+
         #endregion
 
         #region Player Location, Sea Level, Lat / Lng, Scene sizes
