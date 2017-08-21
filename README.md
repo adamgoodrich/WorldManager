@@ -9,7 +9,9 @@ Assets can choose which parts of the API they implement and regardless of how mu
 
 Additionally, WAPI introduces a global set of shader variables, so that any shader that implements WAPI will automatically be updated when settings change without requiring the overhead associated with the subscription mechanism.
 
-This API will be kept stable and professionaly maintained, and will also be available as a free unity asset (soon). For more information go to https://forum.unity3d.com/threads/world-manager-generic-world-management-system.484239/.
+WAPI is free for you to use any way you like. It will be professionaly maintained, and will also be packaged up as a free unity asset (soon). For more information on WAPI go to https://forum.unity3d.com/threads/world-manager-generic-world-management-system.484239/.
+
+WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS - The Complete Terrain Shader, and Pegasus. Adam is a specialist in environmental generation in Unity, and this project was born out of frustration in getting things to work together. To get access to a free monthly newsletter with tips, tricks, reviews and freebies sign up on our home page at http://www.procedural-worlds.com/.
 
 ## Basic Usage Pattern
 
