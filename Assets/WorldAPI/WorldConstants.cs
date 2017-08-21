@@ -11,7 +11,7 @@ namespace WAPI
         /// Version information
         /// </summary>
         public static readonly int MajorVersion = 0;
-        public static readonly int MinorVersion = 2;
+        public static readonly int MinorVersion = 3;
 
         /// <summary>
         /// World API present define
