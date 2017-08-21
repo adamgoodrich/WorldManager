@@ -21,11 +21,13 @@ namespace WAPI
     /// To generate events, and get and set values use the following generic format e.g. 
     ///     WorldManager.Instance.Api()
     /// 
-    /// To receive events when values are changed connect up the event handlers e.g. 
-    ///     WorldManager.Instance.OnApiChangedHandler += YourHandler()
+    /// To receive events when values are changed implement your own listener via the 
+    /// IWorldApiChangeHandler interface and then connect it up
+    ///
+    ///     WorldManager.Instance.AddListener(this);
     /// 
     /// To stop receiving events when values change disconnect your handler e.g.
-    ///     WorldManager.Instance.OnApiChangedHandler -= YourHandler()
+    ///     WorldManager.Instance.RemoveListener(this);
     /// 
     /// To use as global variables in shaders the general naming standard is 
     /// _WAPI_[PropertyName], however in many instances the data has been stored

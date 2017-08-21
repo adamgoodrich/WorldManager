@@ -16,11 +16,51 @@ This API will be kept stable and professionaly maintained, and will also be avai
 To generate events, and get and set values use the following generic format e.g. 
     WorldManager.Instance.Api()
 
-To receive events when values are changed connect up the event handlers e.g. 
-    WorldManager.Instance.OnApiChangedHandler += YourHandler()
+To receive events when values are changed implement your own listener via the IWorldApiChangeHandler interface and then connect it up e.g. 
 
-To stop receiving events when values change disconnect your handler e.g.
-    WorldManager.Instance.OnApiChangedHandler -= YourHandler()
+    public class WorldController : MonoBehaviour, IWorldApiChangeHandler
+    {
+        .. your stuff..
+
+        void Start()
+        {
+            ConnectToWorldAPI();
+        }
+
+        //Let world manager API know you want to handle events
+        void ConnectToWorldAPI()
+        {
+            WorldManager.Instance.AddListener(this);
+        }
+
+        //Let world manager API know that you are no longer interested
+        void DisconnectFromWorldAPI()
+        {
+            WorldManager.Instance.RemoveListener(this);
+        }
+
+        //If this object has been added as a listener then it will be called whenever an event is fired,
+        //use the changeArgs.HasChanged method to filter for the events you are interested in
+        public void OnWorldChanged(WorldChangeArgs changeArgs)
+        {
+            if (changeArgs.HasChanged(WorldConstants.WorldChangeEvents.GameTimeChanged))
+            {
+                //Grab game time
+                m_timeNow = (float)changeArgs.manager.GetTimeDecimal();
+
+                //Do whatever logic you want
+                m_timeNow += 0.25f;
+
+                //Set it back into world manager -> NOTE you would never do THIS SPECIFIC THING
+                //as this will cause another OnWorldChanged event to be generated, which would in turn
+                //cause this to be executed again in one nasty loop
+                WorldManager.Instance.SetDecimalTime(m_timeNow);
+            }
+        }
+    }
+
+Take a look at WorldController.cs for a simple example of how to use the API. It both listens to things
+and also implements a simple user interface that controls it in the editor and at runtime.
 
 To use as global variables in shaders the general naming standard is \_WAPI\_[PropertyName], however in many instances the data has been stored in vectors for efficient transfer to the GPU, so take a peek at the code to get the naming. At the very least however all shader variables are prefixed with \_WAPI\_.
 
