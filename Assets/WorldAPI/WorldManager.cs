@@ -913,6 +913,12 @@ namespace WAPI
         /// <param name="listener">The listener to be added</param>
         public void AddListener(IWorldApiChangeHandler listener)
         {
+            //Debug.Log("Adding listener " + listener.GetType());
+
+            //Remove it if it was there
+            m_listeners.Remove(listener);
+
+            //And add it
             m_listeners.Add(listener);
         }
 

@@ -165,13 +165,20 @@ namespace WAPI
             GUILayout.EndVertical();
 
 
-            GUILayout.BeginVertical("Settings", m_boxStyle);
+            GUILayout.BeginVertical("Start Settings", m_boxStyle);
             GUILayout.Space(20f);
             DrawHelpSectionLabel("Settings");
 
+            bool useStartSettings = EditorGUILayout.Toggle(GetLabel("Apply Settings On Start"), m_controller.m_applyStartSettingsOnAwake);
+
             GUILayout.BeginVertical(m_boxStyle);
-            float minSnowHeight = EditorGUILayout.FloatField(GetLabel("Min Snow Height"), WorldManager.Instance.SnowMinHeight);
+
+            float startGameTime = EditorGUILayout.Slider(GetLabel("Start Game Time"), m_controller.m_startGameTime, 0f, 23.99f);
+            DrawHelpLabel("Game Time");
+
+            float minSnowHeight = EditorGUILayout.FloatField(GetLabel("Min Snow Height"), m_controller.m_startSnowMinHeight);
             DrawHelpLabel("Min Snow Height");
+
 
 /*
             float maxSmoothness = EditorGUILayout.Slider(GetLabel("Max Smoothness"), m_manager.MaxRainSmoothness, 0f, 30f);
@@ -197,9 +204,15 @@ namespace WAPI
             //Handle changes
             if (EditorGUI.EndChangeCheck())
             {
+                //Undo
+                Undo.RecordObject(m_controller, "Made changes");
+
                 //UX Settings
                 m_controller.m_allowKeyboardControl = allowKeyboardControl;
+                m_controller.m_applyStartSettingsOnAwake = useStartSettings;
                 m_controller.m_timeUpdateIncrement = timeIncrement;
+                m_controller.m_startGameTime = startGameTime;
+                m_controller.m_startSnowMinHeight = minSnowHeight;
                 WorldManager.Instance.SetDecimalTime(decimalTime);
                 WorldManager.Instance.SnowPower = snowPower;
                 WorldManager.Instance.SnowMinHeight = minSnowHeight;
