@@ -6,12 +6,16 @@ using System.Collections.Generic;
 
 namespace WAPI
 {
-    [TrackColor(0.8642069f, 0.87f, 0.855f)]
+    [TrackColor(0f, 0.6f, 0f)]
     [TrackClipType(typeof(WorldManagerGameTimeClip))]
     public class WorldManagerGameTimeTrack : TrackAsset
     {
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
+            foreach (var c in GetClips())
+            {
+                c.displayName = "Time";
+            }
             return ScriptPlayable<WorldManagerGameTimeMixerBehaviour>.Create(graph, inputCount);
         }
     }

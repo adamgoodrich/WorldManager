@@ -9,7 +9,12 @@ namespace WAPI
     [Serializable]
     public class WorldManagerSnowBehaviour : PlayableBehaviour
     {
+        [Range(0f, 1f)]
         public float snowPower;
+        [Range(0f, 1f)]
+        public float snowPowerOnTerrain;
+        public float snowMinHeight;
+        public float snowAge;
     }
 }
 #endif

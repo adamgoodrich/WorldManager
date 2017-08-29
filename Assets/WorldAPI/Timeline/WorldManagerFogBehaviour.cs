@@ -1,5 +1,6 @@
 #if UNITY_2017_1_OR_NEWER
 using System;
+using UnityEngine;
 using UnityEngine.Playables;
 
 namespace WAPI
@@ -7,7 +8,12 @@ namespace WAPI
     [Serializable]
     public class WorldManagerFogBehaviour : PlayableBehaviour
     {
-        public float fogPower;
+        [Range(0f, 1f)]
+        public float fogHeightPower;
+        public float fogHeightMax;
+        [Range(0f, 1f)]
+        public float fogDistancePower;
+        public float fogDistanceMax;
     }
 }
 #endif

@@ -11,24 +11,35 @@ namespace WAPI
             //Get our inputs
             int inputCount = playable.GetInputCount();
 
-            //Calculate blended fog power
-            double blendedFogPower = 0;
-            double totalWeight = 0;
+            //Calculate blended
+            float blendedFogHeightPower = 0f;
+            float blendedHeightMax = 0f;
+            float blendedFogDistancePower = 0f;
+            float blendedFogDistanceMax = 0f;
+            float totalWeight = 0;
+
             for (int i = 0; i < inputCount; i++)
             {
-                double inputWeight = playable.GetInputWeight(i);
-                ScriptPlayable<WorldManagerFogBehaviour> inputPlayable =
-                    (ScriptPlayable<WorldManagerFogBehaviour>) playable.GetInput(i);
+                float inputWeight = playable.GetInputWeight(i);
+                ScriptPlayable<WorldManagerFogBehaviour> inputPlayable = (ScriptPlayable<WorldManagerFogBehaviour>) playable.GetInput(i);
                 WorldManagerFogBehaviour input = inputPlayable.GetBehaviour();
 
-                blendedFogPower += input.fogPower*inputWeight;
+                blendedFogHeightPower += input.fogHeightPower * inputWeight;
+                blendedHeightMax += input.fogHeightMax * inputWeight;
+                blendedFogDistancePower += input.fogDistancePower * inputWeight;
+                blendedFogDistanceMax += input.fogDistanceMax * inputWeight;
                 totalWeight += inputWeight;
             }
 
             //We will only update world manager if we got some weights i.e. we are being affected by the timeline
-            if (!Mathf.Approximately((float) totalWeight, 0f))
+            if (!Mathf.Approximately(totalWeight, 0f))
             {
-                WorldManager.Instance.FogPower = (float) blendedFogPower;
+                Vector4 fogData = WorldManager.Instance.Fog;
+                fogData.x = blendedFogHeightPower;
+                fogData.y = blendedHeightMax;
+                fogData.z = blendedFogDistancePower;
+                fogData.w = blendedFogDistanceMax;
+                WorldManager.Instance.Fog = fogData;
             }
         }
     }

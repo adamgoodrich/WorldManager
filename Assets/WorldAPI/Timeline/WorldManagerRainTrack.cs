@@ -5,12 +5,16 @@ using UnityEngine.Timeline;
 
 namespace WAPI
 {
-    [TrackColor(0.8642069f, 0.87f, 0.855f)]
+    [TrackColor(0.0f, 0.6f, 0.8f)]
     [TrackClipType(typeof(WorldManagerRainClip))]
     public class WorldManagerRainTrack : TrackAsset
     {
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
+            foreach (var c in GetClips())
+            {
+                c.displayName = "Rain";
+            }
             return ScriptPlayable<WorldManagerRainMixerBehaviour>.Create(graph, inputCount);
         }
     }

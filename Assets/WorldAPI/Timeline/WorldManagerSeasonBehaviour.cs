@@ -9,6 +9,7 @@ namespace WAPI
     [Serializable]
     public class WorldManagerSeasonBehaviour : PlayableBehaviour
     {
+        [Range(0f, 3.999f)]
         public float season;
     }
 }

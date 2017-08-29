@@ -6,12 +6,16 @@ using System.Collections.Generic;
 
 namespace WAPI
 {
-    [TrackColor(0.8642069f, 0.87f, 0.855f)]
+    [TrackColor(1f, 1f, 1f)]
     [TrackClipType(typeof(WorldManagerSnowClip))]
     public class WorldManagerSnowTrack : TrackAsset
     {
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
+            foreach (var c in GetClips())
+            {
+                c.displayName = "Snow";
+            }
             return ScriptPlayable<WorldManagerSnowMixerBehaviour>.Create(graph, inputCount);
         }
     }

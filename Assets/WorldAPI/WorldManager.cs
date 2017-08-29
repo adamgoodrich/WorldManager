@@ -274,6 +274,23 @@ namespace WAPI
         #region Wind
 
         /// <summary>
+        /// Get and set wind - x = WindDirection, y = WindSpeed, z = WindTurbulence
+        /// </summary>
+        public Vector4 Wind
+        {
+            get { return m_windData; }
+            set
+            {
+                if (m_windData != value)
+                {
+                    m_windData = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.WindChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
+        /// <summary>
         /// Wind direction 0..360f
         /// </summary>
         public float WindDirection
@@ -329,9 +346,26 @@ namespace WAPI
         #region Fog
 
         /// <summary>
-        /// Fog power - in range 0 .. 1
+        /// Get and set fog, x = FogHeightPower, y = FogHeightMax, z = FogDistancePower, w = FogDistanceMax
         /// </summary>
-        public float FogPower
+        public Vector4 Fog
+        { 
+            get { return m_fogData; }
+            set
+            {
+                if (m_fogData != value)
+                {
+                    m_fogData = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.FogChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fog height power - in range 0 .. 1
+        /// </summary>
+        public float FogHeightPower
         {
             get { return m_fogData.x; }
             set
@@ -346,9 +380,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Minimum fog height in world units / meters
+        /// Maximum height for height based fog in world units / meters
         /// </summary>
-        public float FogMinHeight
+        public float FogHeightMax
         {
             get { return m_fogData.y; }
             set
@@ -363,9 +397,10 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Maximum fog height in world units / meters
+        /// Fog distance power 0..1
+        /// 
         /// </summary>
-        public float FogMaxHeight
+        public float FogDistancePower
         {
             get { return m_fogData.z; }
             set
@@ -379,9 +414,43 @@ namespace WAPI
             }
         }
 
+        /// <summary>
+        /// Maximum fog distance in world units / meters
+        /// </summary>
+        public float FogDistanceMax
+        {
+            get { return m_fogData.w; }
+            set
+            {
+                if (m_fogData.w != value)
+                {
+                    m_fogData.w = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.FogChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
         #endregion
 
         #region Rain
+
+        /// <summary>
+        /// Get and set rain - x = RainPower, y = RainPowerOnTerrain, z = RainMinHeight, w = RainMaxHeight
+        /// </summary>
+        public Vector4 Rain
+        {
+            get { return m_rainData; }
+            set
+            {
+                if (m_rainData != value)
+                {
+                    m_rainData = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.RainChanged;
+                    RaiseEvent();
+                }
+            }
+        }
 
         /// <summary>
         /// Rain power - in range 0 .. 1
@@ -401,9 +470,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Minimum rain height in world units / meters
+        /// Rain power on terrain - in range 0 .. 1
         /// </summary>
-        public float RainMinHeight
+        public float RainPowerTerrain
         {
             get { return m_rainData.y; }
             set
@@ -418,9 +487,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Maximum rain height in world units / meters
+        /// Minimum rain height in world units / meters
         /// </summary>
-        public float RainMaxHeight
+        public float RainMinHeight
         {
             get { return m_rainData.z; }
             set
@@ -434,9 +503,43 @@ namespace WAPI
             }
         }
 
+        /// <summary>
+        /// Maximum rain height in world units / meters
+        /// </summary>
+        public float RainMaxHeight
+        {
+            get { return m_rainData.w; }
+            set
+            {
+                if (m_rainData.w != value)
+                {
+                    m_rainData.w = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.RainChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
         #endregion
 
         #region Hail
+
+        /// <summary>
+        /// Get and set hail- x = HailPower, y = HailPowerOnTerrain, z = MinHailHeight, w = MaximumHailHeight
+        /// </summary>
+        public Vector4 Hail
+        {
+            get { return m_haildata; }
+            set
+            {
+                if (m_haildata != value)
+                {
+                    m_haildata = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.HailChanged;
+                    RaiseEvent();
+                }
+            }
+        }
 
         /// <summary>
         /// Hail power - in range 0 .. 1
@@ -456,9 +559,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Minimum hail height in world units / meters
+        /// Hail power on terrain 0..1
         /// </summary>
-        public float HailMinHeight
+        public float HailPowerTerrain
         {
             get { return m_haildata.y; }
             set
@@ -473,9 +576,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Maximum hail height in world units / meters
+        /// Minimum hail height in world units / meters
         /// </summary>
-        public float HailMaxHeight
+        public float HailMinHeight
         {
             get { return m_haildata.z; }
             set
@@ -489,9 +592,43 @@ namespace WAPI
             }
         }
 
+        /// <summary>
+        /// Maximum hail height in world units / meters
+        /// </summary>
+        public float HailMaxHeight
+        {
+            get { return m_haildata.w; }
+            set
+            {
+                if (m_haildata.w != value)
+                {
+                    m_haildata.w = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.HailChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
         #endregion
 
         #region Snow
+
+        /// <summary>
+        /// Get and set all snow, x = SnowPower, y = SnowPowerOnTerrain, z = SnowMinHeight, w = SnowAge
+        /// </summary>
+        public Vector4 Snow
+        {
+            get { return m_snowData; }
+            set
+            {
+                if (m_snowData != value)
+                {
+                    m_snowData = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.SnowChanged;
+                    RaiseEvent();
+                }
+            }
+        }
 
         /// <summary>
         /// Snow power - in range 0 .. 1
@@ -511,9 +648,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Minimum snow height in world units / meters
+        /// Snow power on terrain in range 0..1
         /// </summary>
-        public float SnowMinHeight
+        public float SnowPowerTerrain
         {
             get { return m_snowData.y; }
             set
@@ -528,9 +665,9 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Maximum snow height in world units / meters
+        /// Minimum snow height in world units / meters
         /// </summary>
-        public float SnowMaxHeight
+        public float SnowMinHeight
         {
             get { return m_snowData.z; }
             set
@@ -587,6 +724,23 @@ namespace WAPI
         #region Clouds
 
         /// <summary>
+        /// Get and set clouds - x = CloudPower, y = CloudMinHeight, z = CloudMaxHeight, w = CloudSpeed
+        /// </summary>
+        public Vector4 Clouds
+        {
+            get { return m_cloudData; }
+            set
+            {
+                if (m_cloudData != value)
+                {
+                    m_cloudData = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.CloudsChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
+        /// <summary>
         /// Cloud power - in range 0 .. 1
         /// </summary>
         public float CloudPower
@@ -621,7 +775,7 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Maximum cloud height in world units / meters
+        /// Maximim cloud height in world units / meters
         /// </summary>
         public float CloudMaxHeight
         {
@@ -637,10 +791,27 @@ namespace WAPI
             }
         }
 
+        /// <summary>
+        /// Speed the clouds are travelling at in meters /sec
+        /// </summary>
+        public float CloudSpeed
+        {
+            get { return m_cloudData.w; }
+            set
+            {
+                if (m_cloudData.w != value)
+                {
+                    m_cloudData.w = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.CloudsChanged;
+                    RaiseEvent();
+                }
+            }
+        }
+
         #endregion
 
         #region Moon
-        
+
         /// <summary>
         /// Moon phase 0 none .. 1 full
         /// </summary>
@@ -682,6 +853,23 @@ namespace WAPI
         #endregion
 
         #region Sound levels
+
+        /// <summary>
+        /// Sound volumes, x = VolumeEnvironment, y = VolumeNPC, z = VolumeAnimals, w = VolumeWeather
+        /// </summary>
+        public Vector4 Volume
+        {
+            get { return m_soundVolumes; }
+            set
+            {
+                if (m_soundVolumes != value)
+                {
+                    m_soundVolumes = value;
+                    m_changeMask |= WorldConstants.WorldChangeEvents.VolumeChanged;
+                    RaiseEvent();
+                }
+            }
+        }
 
         /// <summary>
         /// Global environment volume
@@ -798,10 +986,6 @@ namespace WAPI
         /// </summary>
         void Update()
         {
-
-
-
-
             for (int idx = 0; idx < m_extensionList.Count; idx++)
             {
                 m_extensionList[idx].Update();
@@ -1053,12 +1237,6 @@ namespace WAPI
         //Extension data - placeholder for anything else you may want to store with world manager
         [SerializeField]
         private List<WorldManagerDataExtension> m_extensionList = new List<WorldManagerDataExtension>();
-
-        //Delegates 
-        public delegate void BoolChangedEventHandler(WorldManager wm, bool newValue);
-        public delegate void Vector3ChangedEventHandler(WorldManager wm, Vector3 newValue);
-        public delegate void FloatChangedEventHandler(WorldManager wm, float newValue);
-        public delegate void TimeChangedEventHandler(WorldManager wm, DateTime newValue);
         #endregion
 
         #region Singleton & general class management
