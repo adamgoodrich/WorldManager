@@ -103,10 +103,5 @@ namespace WAPI
                 m_timeNow = (float)changeArgs.manager.GetTimeDecimal();
             }
         }
-
-
-
-
-
     }
 }

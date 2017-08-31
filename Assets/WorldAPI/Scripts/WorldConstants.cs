@@ -11,7 +11,7 @@ namespace WAPI
         /// Version information
         /// </summary>
         public static readonly int MajorVersion = 0;
-        public static readonly int MinorVersion = 7;
+        public static readonly int MinorVersion = 8;
 
         /// <summary>
         /// World API present define
@@ -39,11 +39,11 @@ namespace WAPI
             public const UInt64 SnowChanged = 1 << 25;
             public const UInt64 ThunderChanged = 1 << 26;
             public const UInt64 CloudsChanged = 1 << 27;
+            public const UInt64 MoonChanged = 1 << 28;
+            public const UInt64 SeasonChanged = 1 << 29;
+            public const UInt64 VolumeChanged = 1 << 30;
 
-            public const UInt64 MoonChanged = 1 << 26;
-            public const UInt64 SeasonChanged = 1 << 27;
-            public const UInt64 VolumeChanged = 1 << 28;
-            public const UInt64 ExtensionChanged = 1 << 29;
+            public const UInt64 ExtensionChanged = (UInt64)1 << 31;
         }
     }
 }

@@ -133,6 +133,20 @@ namespace WAPI
             float decimalTime = EditorGUILayout.Slider(GetLabel("Time"), (float)WorldManager.Instance.GetTimeDecimal(), 0f, 24f);
             DrawHelpLabel("Time");
 
+            EditorGUILayout.LabelField("Fog");
+
+            EditorGUI.indentLevel++;
+            float fogHeightPower = EditorGUILayout.Slider(GetLabel("Fog Height Power"), WorldManager.Instance.FogHeightPower, 0f, 1f);
+            DrawHelpLabel("Fog Height Power");
+            float fogHeightMax = EditorGUILayout.FloatField(GetLabel("Fog Height Max"), WorldManager.Instance.FogHeightMax);
+            DrawHelpLabel("Fog Height Max");
+            float fogDistancePower = EditorGUILayout.Slider(GetLabel("Fog Distance Power"), WorldManager.Instance.FogDistancePower, 0f, 1f);
+            DrawHelpLabel("Fog Distance Power");
+            float fogDistanceMax = EditorGUILayout.FloatField(GetLabel("Fog Distance Max"), WorldManager.Instance.FogDistanceMax);
+            DrawHelpLabel("Fog Distance Max");
+
+            EditorGUI.indentLevel--;
+
             float rainPower = EditorGUILayout.Slider(GetLabel("Rain Power"), WorldManager.Instance.RainPower, 0f, 1f);
             DrawHelpLabel("Rain Power");
 
@@ -214,6 +228,10 @@ namespace WAPI
                 m_controller.m_startGameTime = startGameTime;
                 m_controller.m_startSnowMinHeight = minSnowHeight;
                 WorldManager.Instance.SetDecimalTime(decimalTime);
+                WorldManager.Instance.FogHeightPower = fogHeightPower;
+                WorldManager.Instance.FogHeightMax = fogHeightMax;
+                WorldManager.Instance.FogDistancePower = fogDistancePower;
+                WorldManager.Instance.FogDistanceMax = fogDistanceMax;
                 WorldManager.Instance.SnowPower = snowPower;
                 WorldManager.Instance.SnowMinHeight = minSnowHeight;
                 WorldManager.Instance.RainPower = rainPower;
