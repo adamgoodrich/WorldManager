@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using System.Collections.Generic;
-using Pegasus;
 
 namespace WAPI
 {
