@@ -15,10 +15,15 @@ WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS - The Complete 
 
 ## Basic Usage Pattern
 
-To generate events, and get and set values use the following generic format e.g. 
-    WorldManager.Instance.Api()
+To enable and disable all events, update and lateupdate
+    WorldManager.Instance.WorldAPIActive = true/false;
 
-To receive events when values are changed implement your own listener via the IWorldApiChangeHandler interface and then connect it up e.g. 
+To generate events, and get and set values use the following generic format e.g.
+    WorldManager.Instance.Api();
+    var value = WorldManager.Instance.Property;
+    WorldManager.Instance.Property = value;
+
+To receive events when values are changed implement your own listener via the IWorldApiChangeHandler interface and then connect it up e.g.
 
     public class WorldController : MonoBehaviour, IWorldApiChangeHandler
     {
