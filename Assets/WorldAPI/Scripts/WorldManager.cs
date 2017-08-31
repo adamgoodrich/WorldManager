@@ -29,6 +29,9 @@ namespace WAPI
     /// To stop receiving events when values change disconnect your handler e.g.
     ///     WorldManager.Instance.RemoveListener(this);
     /// 
+    /// To shut everything down and start it up again use WorldAPIActive e.g.
+    ///    WorldManager.Instance.WorldAPIActive = false;
+    /// 
     /// To use as global variables in shaders the general naming standard is 
     /// _WAPI_[PropertyName], however in many instances the data has been stored
     /// in vectors for efficient transfer to the GPU, so take a peek at the code to 
@@ -986,6 +989,13 @@ namespace WAPI
         /// </summary>
         void Update()
         {
+            //Exit if not active
+            if (!m_worldAPIActive)
+            {
+                return;
+            }
+
+            //Call update on extensions
             for (int idx = 0; idx < m_extensionList.Count; idx++)
             {
                 m_extensionList[idx].Update();
@@ -998,6 +1008,13 @@ namespace WAPI
         /// </summary>
         void LateUpdate()
         {
+            //Exit if we are not active
+            if (!m_worldAPIActive)
+            {
+                return;
+            }
+
+            //Only do something if something changed
             if (m_changeMask != 0)
             {
                 //This seems heavy - perhaps faster to add additional testing
@@ -1116,10 +1133,16 @@ namespace WAPI
         }
 
         /// <summary>
-        /// Raise event if something has changed
+        /// Raise event if something has changed and world manager is active
         /// </summary>
         void RaiseEvent()
         {
+            //Exit if we are not active
+            if (!m_worldAPIActive)
+            {
+                return;
+            }
+
             //Exit if nothing changed
             if (m_changeMask == 0)
             {
