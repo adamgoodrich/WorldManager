@@ -9,9 +9,9 @@ Assets can choose which parts of the API they implement and regardless of how mu
 
 Additionally, WAPI introduces a global set of shader variables, so that any shader that implements WAPI will automatically be updated when settings change without requiring the overhead associated with the subscription mechanism.
 
-WAPI is free for you to use any way you like. It will be professionaly maintained, and will also be packaged up as a free unity asset (soon). For more information on WAPI go to http://www.procedural-worlds.com/blog/wapi/.
+WAPI is free for you to use any way you like. It will be professionally maintained, and will also be packaged up as a free unity asset (soon). For more information on WAPI go to http://www.procedural-worlds.com/blog/wapi/.
 
-WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS - The Complete PBR Terrain Shader, and Pegasus. Adam is a specialist in environmental and procedural generation in Unity, and this project was born out of his frustration with getting things to work nicely together. If you would like access to his free monthly newsletter with tips, tricks, reviews and freebies then sign up on his home page at http://www.procedural-worlds.com/.
+WAPI was created by Adam Goodrich, the author of Gaia, GeNa, CTS (The Complete PBR Terrain Shader) and Pegasus. Adam is a specialist in environmental and procedural generation in Unity3D and this project was born out of his frustration with getting things to work nicely together. If you would like access to his free monthly newsletter with tips, tricks, reviews and freebies then sign up on his home page at http://www.procedural-worlds.com/.
 
 ## Basic Usage Pattern
 
